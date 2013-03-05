@@ -58,7 +58,6 @@ def _get_plugins():
     # Create a dict mapping the plugin name to the plugin method
     for item in pluginlist:
         if item.endswith('.py'):
-            mod=__import__(item[:-3])
             try:
                 mod = imp.load_module('hostlists_plugins_%s' % os.path.basename(item[:-3]), open(item), item,
                                       ('.py', 'r', imp.PY_SOURCE))
