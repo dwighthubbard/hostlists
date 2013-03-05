@@ -23,7 +23,7 @@ setup(
     author_email = 'dhubbard@yahoo-inc.com',
     url = 'http://www.yahoo.com',
     license = 'LICENSE.txt',
-    packages = ["hostlists"],
+    packages = ['hostlists'],
     data_files = [('/usr/lib/hostlists/plugins',
                    ['hostlists_plugins/file.py', 'hostlists_plugins/dns.py', 'hostlists_plugins/dnsip.py',
                     'hostlists_plugins/range.py', 'hostlists_plugins/haproxy.py', 'hostlists_plugins/plugintype.py'])],
