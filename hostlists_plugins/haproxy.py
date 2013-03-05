@@ -77,6 +77,7 @@ def server_setting(server='default',setting=None):
       return settings[server][setting]
   return None
 
+# noinspection PyBroadException
 def expand(value,name='haproxy',method=None):
   state='ALL'
   if name in ['haproxy_up']:

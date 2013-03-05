@@ -29,11 +29,9 @@ to actually obtain the listings.
 # Built in module imports
 import os
 import sys
-import optparse
 import imp
 import json
 import re
-import socket
 
 # Global plugin cache so we don't constantly reload the plugin modules
 global_plugins = { }
@@ -45,6 +43,7 @@ SET_OPERATORS = ['-']
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
 
 
+# noinspection PyBroadException
 def _get_plugins():
     """ Find all the hostlists plugins """
     plugins = global_plugins

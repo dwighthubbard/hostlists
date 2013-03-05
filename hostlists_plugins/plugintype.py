@@ -19,6 +19,7 @@ For example:
    * Return apache[1-2].ny.foo.com, apache[2-3].lax.foo.com,
      joesdektop.foo.com 
 """
+# noinspection PyStatementEffect
 """
  Copyright (c) 2010-2013 Yahoo! Inc. All rights reserved.
  Licensed under the Apache License, Version 2.0 (the "License");
