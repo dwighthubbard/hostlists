@@ -24,6 +24,7 @@ import dns.reversename
 def name():
   return 'dns'
 
+# noinspection PyUnresolvedReferences
 def expand(value):
   tmplist=[]
   addresses=[]

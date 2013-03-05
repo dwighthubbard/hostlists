@@ -5,6 +5,7 @@
 def name():
   return ['file']
 
+# noinspection PyUnusedLocal
 def expand(value,name="file"):
   tmplist=[]
   for host in [i.strip() for i in open(value,'r').readlines()]:

@@ -43,7 +43,6 @@ def name():
 def expand(value,name=None):
   """ Try all plugins of a specific type for a result, if none
   are able to expand the value further then return just the value """
-  tmplist=[]
   mod_type='vip'
   if not name:
     return [value]
