@@ -87,7 +87,7 @@ def get_setting(key):
 
 
 def expand(range_list, onepass = False):
-    """ 
+    """
     Expand a list of lists and set operators into a final host lists 
     >>> hostlists.expand(['foo[01-10]','-','foo[04-06]'])
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
@@ -103,7 +103,6 @@ def expand(range_list, onepass = False):
             set2 = expand_item(item)
             new_list.append(list(set(set1).difference(set(set2))))
             set1 = None
-            set2 = None
             operation = None
         elif item in SET_OPERATORS and len(new_list):
             set1 = new_list.pop()

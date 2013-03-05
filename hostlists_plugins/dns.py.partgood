@@ -7,7 +7,6 @@ def name():
 
 def expand(value):
   tmplist=[]
-  adresses=[]
   try:
     answers = list(dns.resolver.query(value))
   except dns.resolver.NoAnswer:
@@ -17,6 +16,5 @@ def expand(value):
       tmplist.append(rdata.address)
     except AttributeError:
       tmplist.append(rdata.qname)
-  print tmplist
   return tmplist
   
