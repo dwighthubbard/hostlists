@@ -64,7 +64,7 @@ def _get_plugins():
                 mod = imp.load_module('hostlists_plugins_%s' % os.path.basename(item[:-3]), open(item), item,
                                       ('.py', 'r', imp.PY_SOURCE))
                 names = mod.name()
-                if type(names) is str:
+                if isinstance(names,(str,unicode)):
                     names = [names]
                 for name in names:
                     if name not in plugins.keys():
@@ -94,7 +94,7 @@ def expand(range_list, onepass = False):
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
     >>> 
     """
-    if type(range_list) is str:
+    if isinstance(range_list,(str,unicode)):
         range_list = [range_list]
     new_list = []
     set1 = None
@@ -134,7 +134,7 @@ def expand_item(range_list, onepass = False):
     """ Expand a list of plugin:parameters into a list of hosts """
     #range_list=list(range_list)      
     # Find all the host list plugins
-    if type(range_list) is str:
+    if isinstance(range_list,(str,unicode)):
         range_list = [range_list]
     plugins = _get_plugins()
 
@@ -240,14 +240,14 @@ def compress(hostnames):
     return result
 
 
-def range_split(range):
+def range_split(hosts):
     """ Split up a range string, this needs to separate comma separated
     items unless they are within square brackets and split out set operations
     as separate items."""
     in_brackets = False
     current = ""
     result_list = []
-    for c in range:
+    for c in hosts:
         if c in ['[']:
             in_brackets = True
         if c in [']']:

@@ -24,7 +24,7 @@ setup(
   url="http://www.yahoo.com",
   license="LICENSE.txt",
   packages=["hostlists"],
-  data_files=[('/usr/lib/hostlists/plugins',['hostlists_plugins/file.py','hostlists_plugins/dns.py','hostlists_plugins/dnsip.py','hostlists_plugins/range.py','hostlists_plugins/haproxy.py','hostlists_plugins/type.py'])],
+  data_files=[('/usr/lib/hostlists/plugins',['hostlists_plugins/file.py','hostlists_plugins/dns.py','hostlists_plugins/dnsip.py','hostlists_plugins/range.py','hostlists_plugins/haproxy.py','hostlists_plugins/plugintype.py'])],
   scripts=['hostlists/hostlists'],
   long_description=open('README.txt').read(),
   description="A python library to obtain lists of hosts from various systems",

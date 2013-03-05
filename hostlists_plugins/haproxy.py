@@ -62,7 +62,7 @@ def name():
   """ Name of plugins this plugin responds to """
   return ['haproxy','haproxy_all','haproxy_up','haproxy_down']
 
-def type():
+def plugin_type():
   """ Type of plugin this is """
   return ['vip']
   
