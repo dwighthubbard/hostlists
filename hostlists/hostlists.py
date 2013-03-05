@@ -190,10 +190,30 @@ def multikeysort(items, columns):
 
 
 def compress(hostnames):
-    """ Compress a list of hosts into a more compact range representation """
-    # This is currently a simple stubbed out implementation that doesn't 
-    # really compress at all.  This functionality isn't really needed by
-    # sshmap to function.
+    """
+    Compress a list of host into a more compact range representation
+    """
+    domain_dict={}
+    result=[]
+    for host in hostnames:
+        if '.' in host:
+            domain='.'.join(host.split('.')[1:])
+        else:
+            domain=''
+        try:
+            domain_dict[domain].append(host)
+        except KeyError:
+            domain_dict[domain]=[host]
+    domains=domain_dict.keys()
+    domains.sort()
+    for domain in domains:
+        hosts=compress_domain(domain_dict[domain])
+        result+=hosts
+    return result
+
+
+def compress_domain(hostnames):
+    """ Compress a list of hosts in a domain into a more compact range representation """
     hostnames.sort()
     prev_dict = { 'prefix': "", 'suffix': '', 'number': 0 }
     items = []
