@@ -69,7 +69,7 @@ def _get_plugins():
                         plugins[name.lower()] = mod
             except:
                 # Error in module import, probably a plugin bug
-                pass
+                print("%s: %s" % (item,sys.exc_info()))
     return plugins
 
 
