@@ -31,6 +31,7 @@ import os
 import sys
 import imp
 import json
+import logging
 import re
 
 # Global plugin cache so we don't constantly reload the plugin modules
@@ -69,7 +70,7 @@ def _get_plugins():
                         plugins[name.lower()] = mod
             except:
                 # Error in module import, probably a plugin bug
-                print("%s: %s" % (item,sys.exc_info()))
+                logging.debug("Plugin import failed %s: %s" % (item,sys.exc_info()))
     return plugins
 
 
