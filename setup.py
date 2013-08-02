@@ -21,7 +21,7 @@ from distutils.core import setup
 
 setup(
     name='hostlists',
-    version='0.5.11',
+    version='0.5.12',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',
@@ -31,12 +31,12 @@ setup(
         (
             'plugins',
             [
-                'hostlists_plugins/dns.py',
-                'hostlists_plugins/dnsip.py',
-                'hostlists_plugins/file.py',
-                'hostlists_plugins/haproxy.py',
-                'hostlists_plugins/range.py',
-                'hostlists_plugins/plugintype.py'
+                'plugins/dns.py',
+                'plugins/dnsip.py',
+                'plugins/file.py',
+                'plugins/haproxy.py',
+                'plugins/range.py',
+                'plugins/plugintype.py'
             ]
         )
     ],
