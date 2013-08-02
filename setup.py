@@ -21,7 +21,7 @@ from distutils.core import setup
 
 setup(
     name='hostlists',
-    version='0.5.12',
+    version='0.5.13',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',
