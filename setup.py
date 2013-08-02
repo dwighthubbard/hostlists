@@ -29,7 +29,7 @@ setup(
     packages=['hostlists'],
     data_files=[
         (
-            'plugins',
+            '',
             [
                 'plugins/dns.py',
                 'plugins/dnsip.py',
