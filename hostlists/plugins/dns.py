@@ -21,6 +21,7 @@
 # noinspection PyUnresolvedReferences
 import dns.resolver
 import dns.reversename
+
 def name():
   return 'dns'
 
