@@ -73,7 +73,8 @@ def _get_plugins():
             templist = os.listdir(os.path.join(directory, 'plugins'))
             for item in templist:
                 pluginlist.append(
-                    os.path.join(os.path.join(directory, 'plugins'), item))
+                    os.path.join(os.path.join(directory, 'plugins'), item)
+                )
     pluginlist.sort()
     # Create a dict mapping the plugin name to the plugin method
     for item in pluginlist:
