@@ -43,6 +43,14 @@ SET_OPERATORS = ['-']
 # Config file
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
 
+# Python3 compat
+if 'basestring' not in dir(__builtins__):
+    # basestring is not in python3.x
+    basestring = str
+
+
+def cmp_compat(a, b):
+    return (a > b) - (a < b)
 
 # noinspection PyBroadException
 def _get_plugins():
@@ -50,13 +58,14 @@ def _get_plugins():
     plugins = global_plugins
     pluginlist = []
     plugin_path = [
+        os.path.dirname(__file__),
         '~/.hostlists',
-        '~/lib/hostlists',
-        os.path.join(sys.prefix, 'hostlists'),
-        os.path.join(sys.prefix, 'site-packages/hostlists'),
-        os.path.join(sys.prefix, 'dist-packages/hostlists'),
-        os.path.join(sys.prefix, 'lib/hostlists'),
-        '/usr/lib/hostlists',
+        #'~/lib/hostlists',
+        #os.path.join(sys.prefix, 'hostlists'),
+        #os.path.join(sys.prefix, 'site-packages/hostlists'),
+        #os.path.join(sys.prefix, 'dist-packages/hostlists'),
+        #os.path.join(sys.prefix, 'lib/hostlists'),
+        #'/usr/lib/hostlists',
         '/home/y/lib/hostlists'
     ] + sys.path
     for directory in plugin_path:
@@ -69,15 +78,16 @@ def _get_plugins():
     # Create a dict mapping the plugin name to the plugin method
     for item in pluginlist:
         if item.endswith('.py'):
+            module_file = open(item)
             try:
                 mod = imp.load_module(
                     'hostlists_plugins_%s' % os.path.basename(item[:-3]),
-                    open(item),
+                    module_file,
                     item,
                     ('.py', 'r', imp.PY_SOURCE)
                 )
                 names = mod.name()
-                if isinstance(names,(str,unicode)):
+                if isinstance(names, basestring):
                     names = [names]
                 for name in names:
                     if name not in plugins.keys():
@@ -85,7 +95,10 @@ def _get_plugins():
             except:
                 # Error in module import, probably a plugin bug
                 logging.debug(
-                    "Plugin import failed %s: %s" % (item,sys.exc_info()))
+                    "Plugin import failed %s:" % (item)
+                )
+            if module_file:
+                module_file.close()
     return plugins
 
 
@@ -108,8 +121,8 @@ def expand(range_list, onepass = False):
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
     >>> 
     """
-    if isinstance(range_list,(str,unicode)):
-        range_list = [range_list]
+    if isinstance(range_list, basestring):
+        range_list = [h.strip() for h in range_list.split(',')]
     new_list = []
     set1 = None
     operation = None
@@ -147,7 +160,11 @@ def expand_item(range_list, onepass = False):
     """ Expand a list of plugin:parameters into a list of hosts """
     #range_list=list(range_list)      
     # Find all the host list plugins
-    if isinstance(range_list,(str,unicode)):
+    if 'basestring' not in dir(__builtins__):
+        # basestring is not in python3.x
+        basestring = str
+
+    if isinstance(range_list,basestring):
         range_list = [range_list]
     plugins = _get_plugins()
 
@@ -200,7 +217,7 @@ def multikeysort(items, columns):
     def comparer(left, right):
         for fn, mult in comparers:
             try:
-                result = cmp(fn(left), fn(right))
+                result = cmp_compat(fn(left), fn(right))
             except KeyError:
                 return 0
             if result:

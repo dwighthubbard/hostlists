@@ -31,12 +31,17 @@ from optparse import OptionParser
 
 if __name__ == "__main__":
     parser = OptionParser(usage="usage: %prog [options] plugin:parameters")
-    parser.add_option("-s","--sep",dest="sep",default=',',help="Separator character, default=\",\"")
-    parser.add_option("--onepass",dest="onepass",default=False,action="store_true")
-    parser.add_option("--expand","-e",dest="expand",default=False,action="store_true",help="Expand the host list and display one host per line")
+    parser.add_option(
+        "-s", "--sep",
+        dest="sep", default=',', help="Separator character, default=\",\"")
+    parser.add_option("--onepass", dest="onepass", default=False,
+                      action="store_true")
+    parser.add_option("--expand", "-e", dest="expand", default=False,
+                      action="store_true",
+                      help="Expand the host list and display one host per line")
     (options, args) = parser.parse_args()
     hostnames = range_split(','.join(args))
     if options.expand:
-        print '\n'.join(expand(hostnames, onepass=options.onepass))
+        print('\n'.join(expand(hostnames, onepass=options.onepass)))
     else:
-        print ', '.join(compress(expand(hostnames, onepass=options.onepass)))
+        print(', '.join(compress(expand(hostnames, onepass=options.onepass))))
