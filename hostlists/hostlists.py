@@ -103,6 +103,13 @@ def _get_plugins():
     return plugins
 
 
+def installed_plugins():
+    plugins = []
+    for plugin in _get_plugins():
+        if plugin:
+            plugins.append(plugin)
+    return plugins
+
 def get_setting(key):
     try:
         settings = json.load(open(CONF_FILE, 'r'))
