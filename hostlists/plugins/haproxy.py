@@ -53,10 +53,21 @@ The setup steps are:
    without password.           
 """
 import os
-import urllib2
 import base64
 import json
 import hostlists
+
+
+# Get urlopen for either python2 or python3
+try:
+    from urllib2 import urlopen
+    from urllib2 import URLError
+    from urllib2 import Request
+except:
+    from urllib.request import urlopen
+    from urllib.request import URLError
+    from urllib.request import Request
+
 
 def name():
   """ Name of plugins this plugin responds to """
@@ -129,12 +140,12 @@ def expand(value,name='haproxy',method=None):
       return []
   else:
     url="http://%s/haproxy?stats;csv" % haproxy
-    request = urllib2.Request(url)
+    request = Request(url)
     if userid and password:
       base64string = base64.encodestring('%s:%s' % (userid, password)).replace('\n', '')
       request.add_header("Authorization", "Basic %s" % base64string)   
     try:
-      result = urllib2.urlopen(request,timeout=timeout).read()
+      result = urlopen(request,timeout=timeout).read()
       for line in result.split('\n'):
         if not line.startswith('#') and len(line.strip()) and ',' in line:
           splitline=line.strip().split(',')
@@ -142,5 +153,5 @@ def expand(value,name='haproxy',method=None):
             if state.upper() == 'ALL' or (splitline[17]==state):
               tmplist.append(splitline[1])
       return tmplist
-    except urllib2.URLError:
+    except URLError:
       return []

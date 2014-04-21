@@ -61,4 +61,4 @@ def get_backends(vip,state='ALL'):
 state='ALL'
 if len(sys.argv) > 2 and sys.argv[2].upper() in ['UP','DOWN']:
   state=sys.argv[2].upper()
-print json.dumps(get_backends(sys.argv[1],state),indent=4)
+print(json.dumps(get_backends(sys.argv[1],state),indent=4))

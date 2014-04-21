@@ -9,9 +9,9 @@ a simplified list.
 This module uses the hostlists_plugins python scripts
 to actually obtain the listings.  
 """
+from __future__ import print_function
 
-#noinspection PyStatementEffect
-"""
+__license__ = """
  Copyright (c) 2010 Yahoo! Inc. All rights reserved.
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ to actually obtain the listings.
  limitations under the License. See accompanying LICENSE file.
 """
 
-# Built in module imports
 import os
 import sys
 import imp
 import json
 import logging
 import re
+import operator
+
 
 # Global plugin cache so we don't constantly reload the plugin modules
 global_plugins = {}
@@ -43,6 +44,14 @@ SET_OPERATORS = ['-']
 # Config file
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
 
+# Python3 compat
+if 'basestring' not in dir(__builtins__):
+    # basestring is not in python3.x
+    basestring = str
+
+
+def cmp_compat(a, b):
+    return (a > b) - (a < b)
 
 # noinspection PyBroadException
 def _get_plugins():
@@ -50,13 +59,14 @@ def _get_plugins():
     plugins = global_plugins
     pluginlist = []
     plugin_path = [
+        os.path.dirname(__file__),
         '~/.hostlists',
-        '~/lib/hostlists',
-        os.path.join(sys.prefix, 'hostlists'),
-        os.path.join(sys.prefix, 'site-packages/hostlists'),
-        os.path.join(sys.prefix, 'dist-packages/hostlists'),
-        os.path.join(sys.prefix, 'lib/hostlists'),
-        '/usr/lib/hostlists',
+        #'~/lib/hostlists',
+        #os.path.join(sys.prefix, 'hostlists'),
+        #os.path.join(sys.prefix, 'site-packages/hostlists'),
+        #os.path.join(sys.prefix, 'dist-packages/hostlists'),
+        #os.path.join(sys.prefix, 'lib/hostlists'),
+        #'/usr/lib/hostlists',
         '/home/y/lib/hostlists'
     ] + sys.path
     for directory in plugin_path:
@@ -64,20 +74,22 @@ def _get_plugins():
             templist = os.listdir(os.path.join(directory, 'plugins'))
             for item in templist:
                 pluginlist.append(
-                    os.path.join(os.path.join(directory, 'plugins'), item))
+                    os.path.join(os.path.join(directory, 'plugins'), item)
+                )
     pluginlist.sort()
     # Create a dict mapping the plugin name to the plugin method
     for item in pluginlist:
         if item.endswith('.py'):
+            module_file = open(item)
             try:
                 mod = imp.load_module(
                     'hostlists_plugins_%s' % os.path.basename(item[:-3]),
-                    open(item),
+                    module_file,
                     item,
                     ('.py', 'r', imp.PY_SOURCE)
                 )
                 names = mod.name()
-                if isinstance(names,(str,unicode)):
+                if isinstance(names, basestring):
                     names = [names]
                 for name in names:
                     if name not in plugins.keys():
@@ -85,9 +97,19 @@ def _get_plugins():
             except:
                 # Error in module import, probably a plugin bug
                 logging.debug(
-                    "Plugin import failed %s: %s" % (item,sys.exc_info()))
+                    "Plugin import failed %s:" % (item)
+                )
+            if module_file:
+                module_file.close()
     return plugins
 
+
+def installed_plugins():
+    plugins = []
+    for plugin in _get_plugins():
+        if plugin:
+            plugins.append(plugin)
+    return plugins
 
 def get_setting(key):
     try:
@@ -108,8 +130,8 @@ def expand(range_list, onepass = False):
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
     >>> 
     """
-    if isinstance(range_list,(str,unicode)):
-        range_list = [range_list]
+    if isinstance(range_list, basestring):
+        range_list = [h.strip() for h in range_list.split(',')]
     new_list = []
     set1 = None
     operation = None
@@ -147,7 +169,11 @@ def expand_item(range_list, onepass = False):
     """ Expand a list of plugin:parameters into a list of hosts """
     #range_list=list(range_list)      
     # Find all the host list plugins
-    if isinstance(range_list,(str,unicode)):
+    if 'basestring' not in dir(__builtins__):
+        # basestring is not in python3.x
+        basestring = str
+
+    if isinstance(range_list,basestring):
         range_list = [range_list]
     plugins = _get_plugins()
 
@@ -171,7 +197,12 @@ def expand_item(range_list, onepass = False):
                         ':'.join(temp[1:]).strip(':'))
                 found_plugin = True
             else:
-                print >> sys.stderr, 'plugin', plugin, 'not found', plugins.keys()
+                # This should probably just be an exception
+                print(
+                    'plugin', plugin,
+                    'not found, valid plugins are:', ','.join(plugins.keys()),
+                    file=sys.stderr
+                )
         else:
             # Default to running through the range plugin
             item = None
@@ -189,48 +220,48 @@ def expand_item(range_list, onepass = False):
 
 
 def multikeysort(items, columns):
-    from operator import itemgetter
 
     comparers = [
-        (
-            (itemgetter(col[1:].strip()), -1) if col.startswith('-') else (itemgetter(col.strip()), 1)
-        ) for col in columns
+        ((operator.itemgetter(col[1:].strip()), -1) if col.startswith('-') else (operator.itemgetter(col.strip()), 1)) for col in columns
     ]
 
     def comparer(left, right):
         for fn, mult in comparers:
             try:
-                result = cmp(fn(left), fn(right))
+                result = cmp_compat(fn(left), fn(right))
             except KeyError:
                 return 0
             if result:
                 return mult * result
         else:
             return 0
-
-    return sorted(items, cmp = comparer)
-
+    try:
+        return sorted(items, cmp=comparer)
+    except TypeError:
+        # Python 3 removed the cmp parameter
+        import functools
+        return sorted(items, key=functools.cmp_to_key(comparer))
 
 def compress(hostnames):
     """
     Compress a list of host into a more compact range representation
     """
-    domain_dict={}
+    domain_dict = {}
     result=[]
     for host in hostnames:
         if '.' in host:
-            domain='.'.join(host.split('.')[1:])
+            domain = '.'.join(host.split('.')[1:])
         else:
-            domain=''
+            domain = ''
         try:
             domain_dict[domain].append(host)
         except KeyError:
             domain_dict[domain]=[host]
-    domains=domain_dict.keys()
+    domains = list(domain_dict.keys())
     domains.sort()
     for domain in domains:
         hosts=compress_domain(domain_dict[domain])
-        result+=hosts
+        result += hosts
     return result
 
 
