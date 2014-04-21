@@ -31,7 +31,7 @@ else:
 
 setup(
     name='hostlists',
-    version='0.6.8',
+    version='0.6.9',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',
