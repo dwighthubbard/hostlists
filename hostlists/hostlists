@@ -11,6 +11,8 @@ This module uses the hostlists_plugins python scripts
 to actually obtain the listings.  
 """
 
+from __future__ import print_function
+
 # noinspection PyStatementEffect
 """
  Copyright (c) 2010 Yahoo! Inc. All rights reserved.
@@ -26,22 +28,62 @@ to actually obtain the listings.
  See the License for the specific language governing permissions and
  limitations under the License. See accompanying LICENSE file.
 """
-from hostlists import *
-from optparse import OptionParser
+import hostlists
+import optparse
+import sys
+
 
 if __name__ == "__main__":
-    parser = OptionParser(usage="usage: %prog [options] plugin:parameters")
+    parser = optparse.OptionParser(
+        usage="usage: %prog [options] plugin:parameters"
+    )
     parser.add_option(
         "-s", "--sep",
-        dest="sep", default=',', help="Separator character, default=\",\"")
-    parser.add_option("--onepass", dest="onepass", default=False,
-                      action="store_true")
-    parser.add_option("--expand", "-e", dest="expand", default=False,
-                      action="store_true",
-                      help="Expand the host list and display one host per line")
+        dest="sep",
+        default=',',
+        help="Separator character, default=\",\""
+    )
+    parser.add_option(
+        "--onepass",
+        dest="onepass",
+        default=False,
+        action="store_true",
+        help="Only perform a single expansion pass (no recursion)"
+    )
+    parser.add_option(
+        "--expand", "-e",
+        dest="expand",
+        default=False,
+        action="store_true",
+        help="Expand the host list and display one host per line"
+    )
+    parser.add_option(
+        "--list_plugins",
+        dest="list_plugins",
+        default=False,
+        action="store_true",
+        help="List the currently found hostlists plugins"
+    )
     (options, args) = parser.parse_args()
-    hostnames = range_split(','.join(args))
+    if options.list_plugins:
+        plugins = hostlists.installed_plugins()
+        plugins.sort()
+        print(
+            'Hostlists plugins currently installed are:'
+        )
+        print('\t'+'\n\t'.join(plugins))
+        sys.exit(0)
+
+    hostnames = hostlists.range_split(','.join(args))
     if options.expand:
-        print('\n'.join(expand(hostnames, onepass=options.onepass)))
+        print('\n'.join(hostlists.expand(hostnames, onepass=options.onepass)))
     else:
-        print(', '.join(compress(expand(hostnames, onepass=options.onepass))))
+        print(
+            ', '.join(
+                hostlists.compress(
+                    hostlists.expand(
+                        hostnames, onepass=options.onepass
+                    )
+                )
+            )
+        )
