@@ -23,7 +23,7 @@ import sys
 
 setup(
     name='hostlists',
-    version='0.6.1',
+    version='0.6.2',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',
@@ -46,5 +46,5 @@ setup(
     ],
     description='A python library to obtain lists of hosts from various '
                 'systems',
-    install_requires=['django', 'dnspython'],
+    install_requires=['dnspython'],
 )
