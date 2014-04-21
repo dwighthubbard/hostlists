@@ -104,6 +104,12 @@ def _get_plugins():
     return plugins
 
 
+def get_plugins():
+    """ Wrap the get_plugins() function so it can be used by plugins
+    """
+    return _get_plugins()
+
+
 def installed_plugins():
     plugins = []
     for plugin in _get_plugins():
