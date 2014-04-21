@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """
 Setup configuration for hostlists
 """
@@ -23,7 +23,7 @@ import sys
 
 setup(
     name='hostlists',
-    version='0.6.2',
+    version='0.6.3',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',
