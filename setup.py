@@ -21,16 +21,24 @@ import os
 import sys
 
 
+# Python2 and Python3 have different requirements
+requirements = []
+if sys.version > '3.0.0':
+    requirements.append('dnspython3')
+else:
+    requirements.append('dnspython')
+
+
 setup(
     name='hostlists',
-    version='0.6.3',
+    version='0.6.7',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',
     license='LICENSE.txt',
     packages=['hostlists', 'hostlists.plugins'],
     scripts=['hostlists/hostlists'],
-    long_description=open('README.txt').read(),
+    long_description=open('README.md').read(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -46,5 +54,6 @@ setup(
     ],
     description='A python library to obtain lists of hosts from various '
                 'systems',
-    install_requires=['dnspython'],
+    requires=requirements,
+    install_requires=requirements,
 )

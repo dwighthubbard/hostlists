@@ -9,9 +9,9 @@ a simplified list.
 This module uses the hostlists_plugins python scripts
 to actually obtain the listings.  
 """
+from __future__ import print_function
 
-#noinspection PyStatementEffect
-"""
+__license__ = """
  Copyright (c) 2010 Yahoo! Inc. All rights reserved.
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -26,13 +26,14 @@ to actually obtain the listings.
  limitations under the License. See accompanying LICENSE file.
 """
 
-# Built in module imports
 import os
 import sys
 import imp
 import json
 import logging
 import re
+import operator
+
 
 # Global plugin cache so we don't constantly reload the plugin modules
 global_plugins = {}
@@ -196,7 +197,12 @@ def expand_item(range_list, onepass = False):
                         ':'.join(temp[1:]).strip(':'))
                 found_plugin = True
             else:
-                print >> sys.stderr, 'plugin', plugin, 'not found', plugins.keys()
+                # This should probably just be an exception
+                print(
+                    'plugin', plugin,
+                    'not found, valid plugins are:', ','.join(plugins.keys()),
+                    file=sys.stderr
+                )
         else:
             # Default to running through the range plugin
             item = None
@@ -214,12 +220,9 @@ def expand_item(range_list, onepass = False):
 
 
 def multikeysort(items, columns):
-    from operator import itemgetter
 
     comparers = [
-        (
-            (itemgetter(col[1:].strip()), -1) if col.startswith('-') else (itemgetter(col.strip()), 1)
-        ) for col in columns
+        ((operator.itemgetter(col[1:].strip()), -1) if col.startswith('-') else (operator.itemgetter(col.strip()), 1)) for col in columns
     ]
 
     def comparer(left, right):
@@ -232,30 +235,33 @@ def multikeysort(items, columns):
                 return mult * result
         else:
             return 0
-
-    return sorted(items, cmp = comparer)
-
+    try:
+        return sorted(items, cmp=comparer)
+    except TypeError:
+        # Python 3 removed the cmp parameter
+        import functools
+        return sorted(items, key=functools.cmp_to_key(comparer))
 
 def compress(hostnames):
     """
     Compress a list of host into a more compact range representation
     """
-    domain_dict={}
+    domain_dict = {}
     result=[]
     for host in hostnames:
         if '.' in host:
-            domain='.'.join(host.split('.')[1:])
+            domain = '.'.join(host.split('.')[1:])
         else:
-            domain=''
+            domain = ''
         try:
             domain_dict[domain].append(host)
         except KeyError:
             domain_dict[domain]=[host]
-    domains=domain_dict.keys()
+    domains = list(domain_dict.keys())
     domains.sort()
     for domain in domains:
         hosts=compress_domain(domain_dict[domain])
-        result+=hosts
+        result += hosts
     return result
 
 
