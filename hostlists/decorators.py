@@ -41,8 +41,7 @@ class TimeoutError(Exception):
     pass
 
 
-def timeout(seconds=300, error_message=os.strerror(errno.ETIME),
-            relogin=False):
+def timeout(seconds=300, error_message=os.strerror(errno.ETIME)):
     """
     Time out the function after a period of time
     :param seconds:
