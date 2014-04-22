@@ -64,12 +64,6 @@ def timeout(seconds=300, error_message=os.strerror(errno.ETIME),
                 result = func(*args, **kwargs)
             finally:
                 signal.alarm(0)
-            if relogin:
-                logging.debug('Got timeout, re-authenticating backyard sso')
-                args[0].sso.login(
-                    password=args[0].config[
-                        'authentication']['bugzilla']['password']
-                )
             return result
         return wraps(func)(timeout_wrapper)
     return timeout_decorator
