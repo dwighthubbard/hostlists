@@ -59,7 +59,7 @@ def block_to_list(block):
         val1_len=len(val1)
         val=''
       if letter == ',':
-        if val1 != None:
+        if val1 is not None:
           result.append(val1.zfill(val1_len))
       else:
         in_range=True
