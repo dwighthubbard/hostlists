@@ -17,9 +17,7 @@ __license__ = """
  limitations under the License. See accompanying LICENSE file.
 """
 from distutils.core import setup
-import os
 import sys
-
 
 # Python2 and Python3 have different requirements
 requirements = []
@@ -31,7 +29,7 @@ else:
 
 setup(
     name='hostlists',
-    version='0.6.9',
+    version='0.6.10',
     author='Dwight Hubbard',
     author_email='dhubbard@yahoo-inc.com',
     url='https://github.com/yahoo/hostlists',

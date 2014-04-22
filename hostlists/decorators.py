@@ -45,7 +45,6 @@ def timeout(seconds=300, error_message=os.strerror(errno.ETIME),
             relogin=False):
     """
     Time out the function after a period of time
-    :param relogin:
     :param seconds:
     :param error_message:
     :return:
