@@ -59,8 +59,9 @@ def expand(value, name=None):
     plugins = hostlists.get_plugins()
     for plugin_name in plugins.keys():
         if (
-            (filter_append != '' and plugin_name.endswith(filter_append)) or
-            (filter_append == '' and plugin_name.find('_') == -1)
+                    (filter_append != '' and plugin_name.endswith(
+                            filter_append)) or
+                    (filter_append == '' and plugin_name.find('_') == -1)
         ):
             try:
                 if mod_type in plugins[plugin_name].type():
@@ -71,4 +72,3 @@ def expand(value, name=None):
             except AttributeError:
                 pass
     return [value]
-  

@@ -29,23 +29,19 @@ __author__ = 'dhubbard'
 import errno
 import os
 import signal
-
-import logging
 from functools import wraps
 
 
-class TimeoutError(Exception):
+class MethodTimeoutError(Exception):
     """
     Timeout exception class
     """
     pass
 
 
-def timeout(seconds=300, error_message=os.strerror(errno.ETIME),
-            relogin=False):
+def timeout(seconds=300, error_message=os.strerror(errno.ETIME)):
     """
     Time out the function after a period of time
-    :param relogin:
     :param seconds:
     :param error_message:
     :return:
@@ -55,7 +51,7 @@ def timeout(seconds=300, error_message=os.strerror(errno.ETIME),
         Decorator function
         """
         def _handle_timeout(signum, frame):
-            raise TimeoutError(error_message)
+            raise MethodTimeoutError(error_message)
 
         def timeout_wrapper(*args, **kwargs):
             signal.signal(signal.SIGALRM, _handle_timeout)
@@ -64,12 +60,6 @@ def timeout(seconds=300, error_message=os.strerror(errno.ETIME),
                 result = func(*args, **kwargs)
             finally:
                 signal.alarm(0)
-            if relogin:
-                logging.debug('Got timeout, re-authenticating backyard sso')
-                args[0].sso.login(
-                    password=args[0].config[
-                        'authentication']['bugzilla']['password']
-                )
             return result
         return wraps(func)(timeout_wrapper)
     return timeout_decorator

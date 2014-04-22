@@ -60,98 +60,108 @@ import hostlists
 
 # Get urlopen for either python2 or python3
 try:
+    # noinspection PyUnresolvedReferences
     from urllib2 import urlopen
+    # noinspection PyUnresolvedReferences
     from urllib2 import URLError
+    # noinspection PyUnresolvedReferences
     from urllib2 import Request
-except:
+except ImportError:
     from urllib.request import urlopen
     from urllib.request import URLError
     from urllib.request import Request
 
 
 def name():
-  """ Name of plugins this plugin responds to """
-  return ['haproxy','haproxy_all','haproxy_up','haproxy_down']
+    """ Name of plugins this plugin responds to """
+    return ['haproxy', 'haproxy_all', 'haproxy_up', 'haproxy_down']
+
 
 def plugin_type():
-  """ Type of plugin this is """
-  return ['vip']
-  
-def server_setting(server='default',setting=None):
-  if not setting:
+    """ Type of plugin this is """
+    return ['vip']
+
+
+def server_setting(server='default', setting=None):
+    if not setting:
+        return None
+    settings = hostlists.get_setting('haproxy_plugin')
+    if not settings:
+        return None
+    if server in settings.keys():
+        if setting in settings[server].keys():
+            return settings[server][setting]
     return None
-  settings=hostlists.get_setting('haproxy_plugin')
-  if not settings:
-    return None
-  if server in settings.keys():
-    if setting in settings[server].keys():
-      return settings[server][setting]
-  return None
+
 
 # noinspection PyBroadException
-def expand(value,name='haproxy',method=None):
-  state='ALL'
-  if name in ['haproxy_up']:
-    state='UP'
-  if name in ['haproxy_down']:
-    state='DOWN'
-  temp=value.split(':')
-  if len(temp):
-    haproxy=temp[0]
-    if len(temp) > 1:
-      backend=temp[1]
+def expand(value, name='haproxy', method=None):
+    state = 'ALL'
+    if name in ['haproxy_up']:
+        state = 'UP'
+    if name in ['haproxy_down']:
+        state = 'DOWN'
+    temp = value.split(':')
+    if len(temp):
+        haproxy = temp[0]
+        if len(temp) > 1:
+            backend = temp[1]
+        else:
+            backend = 'all'
     else:
-      backend='all'  
-  else:
-    return []
-  # Determine settings
-  # the last setting that is found is the setting so we go
-  # from most generic to least
-  # first some reasonable hardwired defaults
-  timeout=2
-  userid=None
-  password=None
-  # Next try and get setting defaults from the config file
-  if server_setting('default','userid'):
-    userid=server_setting('default','userid')
-  if server_setting('default','password'):
-    password=server_setting('default','password')
-  if server_setting('default','timeout'):
-    timeout=server_setting('default','timeout')
-  if haproxy and not method and server_setting(haproxy,'method'):
-    method=server_setting(haproxy,'method')
-  if not method and server_setting('default','method'):
-    method=server_setting('default','method')
-  # Finally try settings specific to the server
-  if haproxy:  
-    if server_setting(haproxy,'userid'):
-      userid=server_setting(haproxy,'userid')
-    if server_setting(haproxy,'password'):
-      password=server_setting(haproxy,'password')
-    if server_setting(haproxy,'timeout'):
-      timeout=server_setting(haproxy,'timeout')  
-  tmplist=[]
-  if method == 'ssh':
-    command='ssh "%s" ./get_haproxy_phys "%s" "%s"'% (haproxy,backend,state)
-    try:
-      hosts=json.loads(os.popen(command).read())
-      return hosts
-    except:
-      return []
-  else:
-    url="http://%s/haproxy?stats;csv" % haproxy
-    request = Request(url)
-    if userid and password:
-      base64string = base64.encodestring('%s:%s' % (userid, password)).replace('\n', '')
-      request.add_header("Authorization", "Basic %s" % base64string)   
-    try:
-      result = urlopen(request,timeout=timeout).read()
-      for line in result.split('\n'):
-        if not line.startswith('#') and len(line.strip()) and ',' in line:
-          splitline=line.strip().split(',')
-          if (splitline[0]==backend or backend.lower()=='all') and splitline[1] not in ['BACKEND','FRONTEND']:
-            if state.upper() == 'ALL' or (splitline[17]==state):
-              tmplist.append(splitline[1])
-      return tmplist
-    except URLError:
-      return []
+        return []
+    # Determine settings
+    # the last setting that is found is the setting so we go
+    # from most generic to least
+    # first some reasonable hardwired defaults
+    timeout = 2
+    userid = None
+    password = None
+    # Next try and get setting defaults from the config file
+    if server_setting('default', 'userid'):
+        userid = server_setting('default', 'userid')
+    if server_setting('default', 'password'):
+        password = server_setting('default', 'password')
+    if server_setting('default', 'timeout'):
+        timeout = server_setting('default', 'timeout')
+    if haproxy and not method and server_setting(haproxy, 'method'):
+        method = server_setting(haproxy, 'method')
+    if not method and server_setting('default', 'method'):
+        method = server_setting('default', 'method')
+    # Finally try settings specific to the server
+    if haproxy:
+        if server_setting(haproxy, 'userid'):
+            userid = server_setting(haproxy, 'userid')
+        if server_setting(haproxy, 'password'):
+            password = server_setting(haproxy, 'password')
+        if server_setting(haproxy, 'timeout'):
+            timeout = server_setting(haproxy, 'timeout')
+    tmplist = []
+    if method == 'ssh':
+        command = 'ssh "%s" ./get_haproxy_phys "%s" "%s"' % (
+        haproxy, backend, state)
+        try:
+            hosts = json.loads(os.popen(command).read())
+            return hosts
+        except:
+            return []
+    else:
+        url = "http://%s/haproxy?stats;csv" % haproxy
+        request = Request(url)
+        if userid and password:
+            base64string = base64.encodestring(
+                '%s:%s' % (userid, password)).replace('\n', '')
+            request.add_header("Authorization", "Basic %s" % base64string)
+        try:
+            result = urlopen(request, timeout=timeout).read()
+            for line in result.split('\n'):
+                if not line.startswith('#') and len(
+                        line.strip()) and ',' in line:
+                    splitline = line.strip().split(',')
+                    if (splitline[0] == backend or backend.lower() == 'all') and \
+                                    splitline[1] not in ['BACKEND', 'FRONTEND']:
+                        if state.upper() == 'ALL' or (splitline[17] == state):
+                            tmplist.append(splitline[1])
+            return tmplist
+        except URLError:
+            return []

@@ -26,13 +26,12 @@ class TestHostlistsExpand(unittest.TestCase):
     def set_up(self):
         pass
 
-
     class base_test_expand_string_input(unittest.TestCase):
         range_list = 'localhost'
         expected_result = ['localhost']
-        def __init__(self, *args, **kwargs):
+
+        def __init__(self):
             result = hostlists.expand(self.range_list)
-            # Should return a list
             self.assertIsInstance(result, list)
             self.assertListEqual(result, self.expected_result)
 

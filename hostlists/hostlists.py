@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """ 
-A plugin extendable hostlist infrastructure 
+A plugin extendable hostlists infrastructure
 
 This module provides functions for getting a list of hosts
 from various systems as well as compressing the list into
@@ -97,7 +97,7 @@ def _get_plugins():
             except:
                 # Error in module import, probably a plugin bug
                 logging.debug(
-                    "Plugin import failed %s:" % (item)
+                    "Plugin import failed %s:" % item
                 )
             if module_file:
                 module_file.close()
@@ -129,7 +129,7 @@ def get_setting(key):
     return None
 
 
-def expand(range_list, onepass = False):
+def expand(range_list, onepass=False):
     """
     Expand a list of lists and set operators into a final host lists 
     >>> hostlists.expand(['foo[01-10]','-','foo[04-06]'])
@@ -171,7 +171,7 @@ def multiple_names(plugin):
         return False
 
 
-def expand_item(range_list, onepass = False):
+def expand_item(range_list, onepass=False):
     """ Expand a list of plugin:parameters into a list of hosts """
     #range_list=list(range_list)      
     # Find all the host list plugins
@@ -179,7 +179,7 @@ def expand_item(range_list, onepass = False):
         # basestring is not in python3.x
         basestring = str
 
-    if isinstance(range_list,basestring):
+    if isinstance(range_list, basestring):
         range_list = [range_list]
     plugins = _get_plugins()
 
@@ -242,6 +242,7 @@ def multikeysort(items, columns):
         else:
             return 0
     try:
+        # noinspection PyArgumentList
         return sorted(items, cmp=comparer)
     except TypeError:
         # Python 3 removed the cmp parameter
