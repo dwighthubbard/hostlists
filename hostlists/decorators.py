@@ -29,12 +29,10 @@ __author__ = 'dhubbard'
 import errno
 import os
 import signal
-
-import logging
 from functools import wraps
 
 
-class TimeoutError(Exception):
+class MethodTimeoutError(Exception):
     """
     Timeout exception class
     """
@@ -53,7 +51,7 @@ def timeout(seconds=300, error_message=os.strerror(errno.ETIME)):
         Decorator function
         """
         def _handle_timeout(signum, frame):
-            raise TimeoutError(error_message)
+            raise MethodTimeoutError(error_message)
 
         def timeout_wrapper(*args, **kwargs):
             signal.signal(signal.SIGALRM, _handle_timeout)
