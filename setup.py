@@ -49,6 +49,7 @@ setup_args = {
         'Operating System :: POSIX',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Topic :: System :: Systems Administration',
         'Topic :: Utilities'
     ],
