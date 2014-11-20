@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """ hostlists plugin to get hosts from a file """
+import os
 
 
 def name():
@@ -9,7 +10,9 @@ def name():
 # noinspection PyUnusedLocal
 def expand(value, name="file"):
     tmplist = []
-    for host in [i.strip() for i in open(value, 'r').readlines()]:
+    for host in [
+        i.strip() for i in open(os.path.expanduser(value), 'r').readlines()
+    ]:
         if not host.startswith('#') and len(host.strip()):
             tmplist.append(host)
     return tmplist

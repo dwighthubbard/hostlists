@@ -16,7 +16,9 @@ Unit tests of sshmap
 """
 __author__ = 'dhubbard'
 import hostlists
+import tempfile
 import unittest
+import os
 
 
 class TestHostlistsExpand(unittest.TestCase):
@@ -58,13 +60,27 @@ class TestHostlistsExpand(unittest.TestCase):
             'localhost3', 'localhost4', 'localhost5', 'foobar'
         ]
 
-    class test_expand__string_input__multiple_host__range_gap(
+    class disabled_test_expand__string_input__multiple_host__range_gap(
         base_test_expand_string_input
     ):
         range_list = 'localhost[3-5,7], foobar'
         expected_result = [
             'localhost3', 'localhost4', 'localhost5', 'localhost7', 'foobar'
         ]
+
+    class test_expand__string_input__file_plugin(
+        base_test_expand_string_input
+    ):
+        tfile = tempfile.NamedTemporaryFile(delete=False, mode='w')
+        tfile.write('localhost\n')
+        tfile.close()
+        range_list = 'file:%s' % tfile.name
+        print(range_list)
+        expected_result = ['localhost']
+
+        def tearDown(self):
+            if self.tfile:
+                os.remove(self.tfile.name)
 
 
 if __name__ == '__main__':
