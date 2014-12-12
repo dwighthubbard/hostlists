@@ -285,7 +285,7 @@ def compress_domain(hostnames):
         #print re.match(r"([^0-9]+)(\d+)(.+).?",sys.argv[1]).groups()
         try:
             parsed_dict = re.match(
-                r"(?P<prefix>[^0-9]+)(?P<number>\d+)(?P<suffix>.+).?",
+                r"(?P<prefix>[^0-9]+)(?P<number>\d+)(?P<suffix>.*).?",
                 host
             ).groupdict()
             # To generate the range we need the entries sorted numerically
