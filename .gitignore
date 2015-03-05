@@ -38,3 +38,12 @@ nosetests.xml
 *~
 
 .idea
+
+# Package metadata
+hostlists/package_metadata.json
+
+# nose output files
+nosetests.xml
+
+# Coverage report
+cobertura.xml

@@ -118,7 +118,7 @@ def get_and_update_metadata():
     """
     if not os.path.exists('.git') and os.path.exists('hostlists/metadata.json'):
         with open(METADATA_FILENAME) as fh:
-            metadata = json.load(fh.read())
+            metadata = json.load(fh)
     else:
         git = Git(version=setup_args['version'])
         metadata = {
