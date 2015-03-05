@@ -179,7 +179,7 @@ def multiple_names(plugin):
     for item in plugins.keys():
         if plugins[item] == plugin:
             count += 1
-    if count > 1:
+    if count > 1:  # Pragma no cover
         return True
     else:
         return False
@@ -206,7 +206,7 @@ def expand_item(range_list, onepass=False):
             if plugin in plugins.keys():
                 # Call the plugin
                 item = None
-                if multiple_names(plugins[plugin]):
+                if multiple_names(plugins[plugin]):  # Pragma no cover
                     newlist += plugins[plugin].expand(
                         ':'.join(temp[1:]).strip(':'), name = plugin)
                 else:

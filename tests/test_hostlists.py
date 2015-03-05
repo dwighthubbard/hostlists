@@ -80,6 +80,14 @@ class TestHostlists(unittest.TestCase):
         result.sort()
         self.assertListEqual(result, expected_result)
 
+    def test_expand_dns(self):
+        result = hostlists.expand(['dns:yahoo.com'])
+        self.assertGreater(len(result), 0)
+
+    def test_expand_dnsip(self):
+        result = hostlists.expand(['dnsip:yahoo.com'])
+        self.assertGreater(len(result), 0)
+
     def test_compress(self):
         result = hostlists.compress(['foo1', 'foo3', 'foo4'])
         expected_result = ['foo1', 'foo[3-4]']

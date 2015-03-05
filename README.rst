@@ -11,7 +11,6 @@ via plugins.
 
 Components
 ----------
-
 hostlists has 2 components:
 
   * hostlists - This module handles hostlist expansion
@@ -20,7 +19,6 @@ hostlists has 2 components:
 
 Dependencies
 ------------
-
   * dnspython (BSD License)
     This python module is used for the dns plugins to perform host expansion
     based on dns.
@@ -28,7 +26,6 @@ Dependencies
 
 Usage
 -----
-
 The hostlists module provides a python module to do host expansion within python
 programs.  It also provides a command line utility to allow usage from the
 command line.
@@ -42,10 +39,9 @@ TBD
 
 Command Line Examples
 ---------------------
-
 ## Expand a list of hosts from round robin dns using the hosts plugin
 
-.. code-block:: shell
+.. code-block:: bash
 
     $ hostlists dns:www.google.com
     pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net
