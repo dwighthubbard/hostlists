@@ -4,6 +4,22 @@ hostlists
 
 .. image:: https://travis-ci.org/yahoo/hostlists.svg?branch=master
     :target: https://travis-ci.org/yahoo/hostlists
+
+.. image:: https://coveralls.io/repos/yahoo/hostlists/badge.svg
+  :target: https://coveralls.io/r/yahoo/hostlists
+
+.. image:: https://pypip.in/download/hostlists/badge.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+    
+.. image:: https://pypip.in/version/hostlists/badge.svg
+   :target: https://pypi.python.org/pypi/hostlists
+
+.. image:: https://pypip.in/py_versions/hostlists/badge.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
+.. image:: https://pypip.in/license/hostlists/badge.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
     
 Python module to generate lists of hosts from various sources that is extensible
 via plugins.
