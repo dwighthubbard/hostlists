@@ -33,4 +33,9 @@ TBD
 
 Command Line Examples
 ---------------------
-$ hostlists
+
+## Expand a list of hosts from round robin dns using the hosts plugin
+
+.. code-block:: bash
+$ hostlists dns:www.google.com
+pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net
