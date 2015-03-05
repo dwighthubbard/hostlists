@@ -95,7 +95,7 @@ class TestHostlists(unittest.TestCase):
 
     def test_range_split(self):
         result = hostlists.range_split('foo1, foo[3-9]')
-        expected_result = ['foo1', ' foo[3-9]']
+        expected_result = ['foo1', 'foo[3-9]']
         self.assertListEqual(result, expected_result)
 
 
