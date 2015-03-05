@@ -4,6 +4,22 @@ hostlists
 
 .. image:: https://travis-ci.org/yahoo/hostlists.svg?branch=master
     :target: https://travis-ci.org/yahoo/hostlists
+
+.. image:: https://coveralls.io/repos/yahoo/hostlists/badge.svg
+  :target: https://coveralls.io/r/yahoo/hostlists
+
+.. image:: https://pypip.in/download/hostlists/badge.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+    
+.. image:: https://pypip.in/version/hostlists/badge.svg
+   :target: https://pypi.python.org/pypi/hostlists
+
+.. image:: https://pypip.in/py_versions/hostlists/badge.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
+.. image:: https://pypip.in/license/hostlists/badge.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
     
 Python module to generate lists of hosts from various sources that is extensible
 via plugins.
@@ -11,7 +27,6 @@ via plugins.
 
 Components
 ----------
-
 hostlists has 2 components:
 
   * hostlists - This module handles hostlist expansion
@@ -20,7 +35,6 @@ hostlists has 2 components:
 
 Dependencies
 ------------
-
   * dnspython (BSD License)
     This python module is used for the dns plugins to perform host expansion
     based on dns.
@@ -28,7 +42,6 @@ Dependencies
 
 Usage
 -----
-
 The hostlists module provides a python module to do host expansion within python
 programs.  It also provides a command line utility to allow usage from the
 command line.
@@ -42,10 +55,9 @@ TBD
 
 Command Line Examples
 ---------------------
-
 ## Expand a list of hosts from round robin dns using the hosts plugin
 
-.. code-block:: shell
+.. code-block:: bash
 
     $ hostlists dns:www.google.com
     pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net
