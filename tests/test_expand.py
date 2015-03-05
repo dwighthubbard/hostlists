@@ -25,8 +25,6 @@ class TestHostlistsExpand(unittest.TestCase):
     """
     hostmap unit tests
     """
-    def set_up(self):
-        pass
 
     class base_test_expand_string_input(unittest.TestCase):
         range_list = 'localhost'
