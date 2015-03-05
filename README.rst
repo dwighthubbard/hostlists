@@ -1,5 +1,9 @@
 hostlists
 =========
+
+.. image:: https://travis-ci.org/yahoo/hostlists.svg?branch=master
+    :target: https://travis-ci.org/yahoo/hostlists
+    
 Python module to generate lists of hosts from various sources that is extensible
 via plugins.
 
