@@ -60,7 +60,7 @@ def block_to_list(block):
                 val = ''
             if letter == ',':
                 if val1 is not None:
-                    result.append(val1.zfill(val1_len))
+                    result.append(val1.zfill(val1_len))  # pragma: no cover
             else:
                 in_range = True
         else:
@@ -88,4 +88,4 @@ def expand_item(item):
     if len(result):
         return result
     else:
-        return [item]
+        return [item]  # pragma: no cover

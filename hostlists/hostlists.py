@@ -53,7 +53,17 @@ if 'basestring' not in dir(__builtins__):
     basestring = str
 
 
+class HostListsError(Exception):
+    pass
+
+
 def cmp_compat(a, b):
+    """
+    Simple comparison function
+    :param a:
+    :param b:
+    :return:
+    """
     return (a > b) - (a < b)
 
 # noinspection PyBroadException
@@ -121,15 +131,21 @@ def installed_plugins():
     return plugins
 
 def get_setting(key):
+    """
+    Get setting values from CONF_FILE
+    :param key:
+    :return:
+    """
     try:
-        settings = json.load(open(CONF_FILE, 'r'))
+        with open(CONF_FILE) as cf:
+            settings = json.load(cf)
     except IOError:
         # Couldn't open the settings file
         #print 'No such conf file'
         return None
     if key in settings.keys():
         return settings[key]
-    return None
+    return None    # pragma: no cover
 
 
 def expand(range_list, onepass=False):
@@ -139,7 +155,7 @@ def expand(range_list, onepass=False):
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
     >>> 
     """
-    if isinstance(range_list, basestring):
+    if isinstance(range_list, basestring):  # pragma: no cover
         range_list = [h.strip() for h in range_list.split(',')]
     new_list = []
     set1 = None
@@ -154,7 +170,7 @@ def expand(range_list, onepass=False):
             set1 = new_list.pop()
             operation = item
         else:
-            expanded_item = expand_item(item, onepass = onepass)
+            expanded_item = expand_item(item, onepass=onepass)
             new_list.append(expanded_item)
     new_list2 = []
     for item in new_list:
@@ -207,10 +223,10 @@ def expand_item(range_list, onepass=False):
                 found_plugin = True
             else:
                 # This should probably just be an exception
-                print(
-                    'plugin', plugin,
-                    'not found, valid plugins are:', ','.join(plugins.keys()),
-                    file=sys.stderr
+                raise HostListsError(
+                    'plugin %s not found, value plugins are: %s' % (
+                        plugin, ','.join(plugins.keys())
+                    )
                 )
         else:
             # Default to running through the range plugin
@@ -229,7 +245,6 @@ def expand_item(range_list, onepass=False):
 
 
 def multikeysort(items, columns):
-
     comparers = [
         ((operator.itemgetter(col[1:].strip()), -1) if col.startswith('-') else (operator.itemgetter(col.strip()), 1)) for col in columns
     ]
@@ -328,7 +343,10 @@ def compress_domain(hostnames):
             else:
                 result.append(
                     '%s[%s-%s]%s' % (
-                        item[0]['prefix'], item[0]['number'], item[-1]['number'], item[0]['suffix']
+                        item[0]['prefix'],
+                        item[0]['number'],
+                        item[-1]['number'],
+                        item[0]['suffix']
                     )
                 )
     return result
