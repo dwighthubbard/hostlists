@@ -67,15 +67,15 @@ def _get_plugins():
     plugins = global_plugins
     pluginlist = []
     plugin_path = [
-        os.path.dirname(__file__),
-        '~/.hostlists',
         #'~/lib/hostlists',
         #os.path.join(sys.prefix, 'hostlists'),
         #os.path.join(sys.prefix, 'site-packages/hostlists'),
         #os.path.join(sys.prefix, 'dist-packages/hostlists'),
         #os.path.join(sys.prefix, 'lib/hostlists'),
         #'/usr/lib/hostlists',
-        '/home/y/lib/hostlists'
+        '/home/y/lib/hostlists',
+        os.path.dirname(__file__),
+        '~/.hostlists',
     ] + sys.path
     for directory in plugin_path:
         if os.path.isdir(os.path.join(directory, 'plugins')):
@@ -367,7 +367,8 @@ def range_split(hosts):
             pass
         else:
             current += c
-    if len(current):
+    current = current.strip().strip(',')
+    if current:
         result_list.append(current)
     return result_list
 

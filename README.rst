@@ -55,10 +55,18 @@ TBD
 
 Command Line Examples
 ---------------------
-## Expand a list of hosts from round robin dns using the hosts plugin
+Expand a list of hosts from round robin dns using the dns plugin
 
 .. code-block:: bash
 
     $ hostlists dns:www.google.com
     pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net
 
+
+Multiple hosts, ranges and plugins can be passed for a single hostlists
+
+.. code-block:: bash
+
+    $ hostlists dns:www.google.com, poodle[10-20,23].dog.com
+    pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net, poodle[10-20].dog.com, poodle23.dog.com
+    

@@ -51,7 +51,6 @@ setup_args = {
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Operating System :: POSIX',
-        'Operating System :: POSIX :: BSD:: FreeBSD',
         'Operating System :: POSIX :: Linux',
         'Operating System :: POSIX :: SunOS/Solaris',
         'Operating System :: MacOS :: MacOS X',
