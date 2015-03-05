@@ -47,11 +47,6 @@ SET_OPERATORS = ['-']
 # Config file
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
 
-# Python3 compat
-if 'basestring' not in dir(__builtins__):
-    # basestring is not in python3.x
-    basestring = str
-
 
 class HostListsError(Exception):
     pass
@@ -102,7 +97,7 @@ def _get_plugins():
                     ('.py', 'r', imp.PY_SOURCE)
                 )
                 names = mod.name()
-                if isinstance(names, basestring):
+                if isinstance(names, str):
                     names = [names]
                 for name in names:
                     if name not in plugins.keys():
@@ -155,7 +150,7 @@ def expand(range_list, onepass=False):
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
     >>> 
     """
-    if isinstance(range_list, basestring):  # pragma: no cover
+    if isinstance(range_list, str):  # pragma: no cover
         range_list = [h.strip() for h in range_list.split(',')]
     new_list = []
     set1 = None
@@ -194,11 +189,8 @@ def expand_item(range_list, onepass=False):
     """ Expand a list of plugin:parameters into a list of hosts """
     #range_list=list(range_list)      
     # Find all the host list plugins
-    if 'basestring' not in dir(__builtins__):
-        # basestring is not in python3.x
-        basestring = str
 
-    if isinstance(range_list, basestring):
+    if isinstance(range_list, str):
         range_list = [range_list]
     plugins = _get_plugins()
 
