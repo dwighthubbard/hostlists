@@ -35,6 +35,9 @@ import re
 import operator
 
 
+logger = logging.getLogger(__name__)
+
+
 # Global plugin cache so we don't constantly reload the plugin modules
 global_plugins = {}
 
@@ -96,7 +99,7 @@ def _get_plugins():
                         plugins[name.lower()] = mod
             except:
                 # Error in module import, probably a plugin bug
-                logging.debug(
+                logger.debug(
                     "Plugin import failed %s:" % item
                 )
             if module_file:

@@ -17,8 +17,12 @@ __license__ = """
  limitations under the License. See accompanying LICENSE file.
 """
 from distutils.core import setup
+import json
 import os
 import sys
+
+
+METADATA_FILENAME = 'hostlists/metadata.json'
 
 
 # Python2 and Python3 have different requirements
@@ -38,7 +42,7 @@ setup_args = {
     'license': 'LICENSE.txt',
     'packages': ['hostlists', 'hostlists.plugins'],
     'scripts': ['hostlists/hostlists'],
-    'long_description': open('README.md').read(),
+    'long_description': open('README.rst').read(),
     'classifiers': [
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -107,8 +111,25 @@ class Git(object):
                 return split_item[1]
 
 
-if __name__ == '__main__':
-    git = Git(version=setup_args['version'])
-    setup_args['version'] = git.version
+def get_and_update_metadata():
+    """
+    Get the package metadata or generate it if missing
+    :return:
+    """
+    if not os.path.exists('.git') and os.path.exists('hostlists/metadata.json'):
+        with open(METADATA_FILENAME) as fh:
+            metadata = json.load(fh)
+    else:
+        git = Git(version=setup_args['version'])
+        metadata = {
+            'version': git.version
+        }
+        with open(METADATA_FILENAME, 'w') as fh:
+            json.dump(metadata, fh)
+    return metadata
 
+
+if __name__ == '__main__':
+    metadata = get_and_update_metadata()
+    setup_args['version'] = metadata['version']
     setup(**setup_args)
