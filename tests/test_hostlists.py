@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-#Copyright (c) 2012-2015 Yahoo! Inc. All rights reserved.
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+# Copyright (c) 2012-2015 Yahoo! Inc. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
 # http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -17,7 +17,6 @@ Unit tests of sshmap
 import hostlists
 import json
 import os
-import tempfile
 import types
 import unittest
 
@@ -60,7 +59,7 @@ class TestHostlists(unittest.TestCase):
         ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
         >>>
         """
-        result = hostlists.expand(['foo[01-10]','-','foo[04-06]'])
+        result = hostlists.expand(['foo[01-10]', '-', 'foo[04-06]'])
         expected_result = [
             'foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
         result.sort()
@@ -68,8 +67,8 @@ class TestHostlists(unittest.TestCase):
         self.assertLessEqual(result, expected_result)
 
     def test_expand_invalid_plugin(self):
-        with self.assertRaises(hostlists.HostListsError) as context:
-            result = hostlists.expand(['boozle:bar'])
+        with self.assertRaises(hostlists.HostListsError):
+            hostlists.expand(['boozle:bar'])
 
     def test_expand_file(self):
         with open('test_expand_file.hostlist', 'w') as fh:

@@ -9,30 +9,30 @@ For example:
    * Query dns for www.foo.com
    * Get a list of two hostnames back haproxy1.ny.foo.com and
      haproxy1.lax.foo.com.
-   * Query reverse proxies and load balancers for the 
-     above two hostnames and the names of any hosts serving 
-     the traffic for them.  haproxy1.ny.foo.com is a vip being 
-     served by apache1.ny.foo.com ad apache2.ny.foo.com. 
+   * Query reverse proxies and load balancers for the
+     above two hostnames and the names of any hosts serving
+     the traffic for them.  haproxy1.ny.foo.com is a vip being
+     served by apache1.ny.foo.com ad apache2.ny.foo.com.
      haproxy1.lax.foo.com is a vip being serviced by
      apache2.lax.foo.com, apache3.lax.foo.com and
-     joesdesktop.foo.com. 
+     joesdesktop.foo.com.
    * Return apache[1-2].ny.foo.com, apache[2-3].lax.foo.com,
-     joesdektop.foo.com 
+     joesdektop.foo.com
 """
-__license__ = """
- Copyright (c) 2010-2014 Yahoo! Inc. All rights reserved.
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
 
- http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2010-2015 Yahoo! Inc. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License. See accompanying LICENSE file.
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License. See accompanying LICENSE file.
-"""
 
 import hostlists
 
@@ -59,9 +59,8 @@ def expand(value, name=None):
     plugins = hostlists.get_plugins()
     for plugin_name in plugins.keys():
         if (
-                    (filter_append != '' and plugin_name.endswith(
-                            filter_append)) or
-                    (filter_append == '' and plugin_name.find('_') == -1)
+            (filter_append != '' and plugin_name.endswith(filter_append)) or
+            (filter_append == '' and plugin_name.find('_') == -1)
         ):
             try:
                 if mod_type in plugins[plugin_name].type():
