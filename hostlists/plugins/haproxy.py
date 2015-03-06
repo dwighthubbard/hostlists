@@ -1,24 +1,6 @@
 #!/usr/bin/env python
-""" haproxy host plugin """
-
-#noinspection PyStatementEffect
 """
- Copyright (c) 2012 Yahoo! Inc. All rights reserved.
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,   
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License. See accompanying LICENSE file.
-"""
-
-#noinspection PyStatementEffect
-"""
+haproxy host plugin
 NOTE:
 This script is primarily intended as a proof of concept of adding a load
 balancer as the host IP address source.
@@ -31,8 +13,8 @@ to call a helper script on the haproxy server to get the information.
 USAGE:
 This plugin requires a signifcant amount of pre-configuration on the haproxy
 server in order to work.  This requires a configuration change to enable
-the stats socket in haproxy, setting permissions, and copying the get_haproxy_phys
-script into place.
+the stats socket in haproxy, setting permissions, and copying the
+get_haproxy_phys script into place.
 
 The setup steps are:
 
@@ -50,12 +32,26 @@ The setup steps are:
    into the root of the home directory of the user that will be connecing
    to the haproxy server.
 5. Set up the user's ~/.ssh/authorized_keys file to allow access via ssh
-   without password.           
+   without password.
 """
-import os
+
+# Copyright (c) 2012 Yahoo! Inc. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License. See accompanying LICENSE file.
+
 import base64
-import json
 import hostlists
+import json
+import os
 
 
 # Get urlopen for either python2 or python3
@@ -139,7 +135,7 @@ def expand(value, name='haproxy', method=None):
     tmplist = []
     if method == 'ssh':
         command = 'ssh "%s" ./get_haproxy_phys "%s" "%s"' % (
-        haproxy, backend, state)
+            haproxy, backend, state)
         try:
             hosts = json.loads(os.popen(command).read())
             return hosts
@@ -159,7 +155,7 @@ def expand(value, name='haproxy', method=None):
                         line.strip()) and ',' in line:
                     splitline = line.strip().split(',')
                     if (splitline[0] == backend or backend.lower() == 'all') and \
-                                    splitline[1] not in ['BACKEND', 'FRONTEND']:
+                            splitline[1] not in ['BACKEND', 'FRONTEND']:
                         if state.upper() == 'ALL' or (splitline[17] == state):
                             tmplist.append(splitline[1])
             return tmplist
