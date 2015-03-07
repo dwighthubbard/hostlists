@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" 
+"""
 A plugin extendable hostlists infrastructure
 
 This module provides functions for getting a list of hosts
@@ -7,24 +7,23 @@ from various systems as well as compressing the list into
 a simplified list.
 
 This module uses the hostlists_plugins python scripts
-to actually obtain the listings.  
+to actually obtain the listings.
 """
 from __future__ import print_function
 
-__license__ = """
- Copyright (c) 2010 Yahoo! Inc. All rights reserved.
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+# Copyright (c) 2010 Yahoo! Inc. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License. See accompanying LICENSE file.
 
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,   
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License. See accompanying LICENSE file.
-"""
 
 import os
 import sys
@@ -33,6 +32,9 @@ import json
 import logging
 import re
 import operator
+
+
+logger = logging.getLogger(__name__)
 
 
 # Global plugin cache so we don't constantly reload the plugin modules
@@ -44,30 +46,29 @@ SET_OPERATORS = ['-']
 # Config file
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
 
-# Python3 compat
-if 'basestring' not in dir(__builtins__):
-    # basestring is not in python3.x
-    basestring = str
+
+class HostListsError(Exception):
+    pass
 
 
 def cmp_compat(a, b):
+    """
+    Simple comparison function
+    :param a:
+    :param b:
+    :return:
+    """
     return (a > b) - (a < b)
 
-# noinspection PyBroadException
+
 def _get_plugins():
     """ Find all the hostlists plugins """
     plugins = global_plugins
     pluginlist = []
     plugin_path = [
+        '/home/y/lib/hostlists',
         os.path.dirname(__file__),
         '~/.hostlists',
-        #'~/lib/hostlists',
-        #os.path.join(sys.prefix, 'hostlists'),
-        #os.path.join(sys.prefix, 'site-packages/hostlists'),
-        #os.path.join(sys.prefix, 'dist-packages/hostlists'),
-        #os.path.join(sys.prefix, 'lib/hostlists'),
-        #'/usr/lib/hostlists',
-        '/home/y/lib/hostlists'
     ] + sys.path
     for directory in plugin_path:
         if os.path.isdir(os.path.join(directory, 'plugins')):
@@ -89,14 +90,14 @@ def _get_plugins():
                     ('.py', 'r', imp.PY_SOURCE)
                 )
                 names = mod.name()
-                if isinstance(names, basestring):
+                if isinstance(names, str):
                     names = [names]
                 for name in names:
                     if name not in plugins.keys():
                         plugins[name.lower()] = mod
             except:
                 # Error in module import, probably a plugin bug
-                logging.debug(
+                logger.debug(
                     "Plugin import failed %s:" % item
                 )
             if module_file:
@@ -117,26 +118,31 @@ def installed_plugins():
             plugins.append(plugin)
     return plugins
 
+
 def get_setting(key):
+    """
+    Get setting values from CONF_FILE
+    :param key:
+    :return:
+    """
     try:
-        settings = json.load(open(CONF_FILE, 'r'))
+        with open(CONF_FILE) as cf:
+            settings = json.load(cf)
     except IOError:
-        # Couldn't open the settings file
-        #print 'No such conf file'
         return None
     if key in settings.keys():
         return settings[key]
-    return None
+    return None    # pragma: no cover
 
 
 def expand(range_list, onepass=False):
     """
-    Expand a list of lists and set operators into a final host lists 
+    Expand a list of lists and set operators into a final host lists
     >>> hostlists.expand(['foo[01-10]','-','foo[04-06]'])
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
-    >>> 
+    >>>
     """
-    if isinstance(range_list, basestring):
+    if isinstance(range_list, str):  # pragma: no cover
         range_list = [h.strip() for h in range_list.split(',')]
     new_list = []
     set1 = None
@@ -151,7 +157,7 @@ def expand(range_list, onepass=False):
             set1 = new_list.pop()
             operation = item
         else:
-            expanded_item = expand_item(item, onepass = onepass)
+            expanded_item = expand_item(item, onepass=onepass)
             new_list.append(expanded_item)
     new_list2 = []
     for item in new_list:
@@ -165,7 +171,7 @@ def multiple_names(plugin):
     for item in plugins.keys():
         if plugins[item] == plugin:
             count += 1
-    if count > 1:
+    if count > 1:  # Pragma no cover
         return True
     else:
         return False
@@ -173,13 +179,8 @@ def multiple_names(plugin):
 
 def expand_item(range_list, onepass=False):
     """ Expand a list of plugin:parameters into a list of hosts """
-    #range_list=list(range_list)      
-    # Find all the host list plugins
-    if 'basestring' not in dir(__builtins__):
-        # basestring is not in python3.x
-        basestring = str
 
-    if isinstance(range_list, basestring):
+    if isinstance(range_list, str):
         range_list = [range_list]
     plugins = _get_plugins()
 
@@ -195,19 +196,21 @@ def expand_item(range_list, onepass=False):
             if plugin in plugins.keys():
                 # Call the plugin
                 item = None
-                if multiple_names(plugins[plugin]):
+                if multiple_names(plugins[plugin]):  # Pragma no cover
                     newlist += plugins[plugin].expand(
-                        ':'.join(temp[1:]).strip(':'), name = plugin)
+                        ':'.join(temp[1:]).strip(':'),
+                        name=plugin
+                    )
                 else:
                     newlist += plugins[plugin].expand(
                         ':'.join(temp[1:]).strip(':'))
                 found_plugin = True
             else:
                 # This should probably just be an exception
-                print(
-                    'plugin', plugin,
-                    'not found, valid plugins are:', ','.join(plugins.keys()),
-                    file=sys.stderr
+                raise HostListsError(
+                    'plugin %s not found, value plugins are: %s' % (
+                        plugin, ','.join(plugins.keys())
+                    )
                 )
         else:
             # Default to running through the range plugin
@@ -226,7 +229,6 @@ def expand_item(range_list, onepass=False):
 
 
 def multikeysort(items, columns):
-
     comparers = [
         ((operator.itemgetter(col[1:].strip()), -1) if col.startswith('-') else (operator.itemgetter(col.strip()), 1)) for col in columns
     ]
@@ -249,12 +251,13 @@ def multikeysort(items, columns):
         import functools
         return sorted(items, key=functools.cmp_to_key(comparer))
 
+
 def compress(hostnames):
     """
     Compress a list of host into a more compact range representation
     """
     domain_dict = {}
-    result=[]
+    result = []
     for host in hostnames:
         if '.' in host:
             domain = '.'.join(host.split('.')[1:])
@@ -263,11 +266,11 @@ def compress(hostnames):
         try:
             domain_dict[domain].append(host)
         except KeyError:
-            domain_dict[domain]=[host]
+            domain_dict[domain] = [host]
     domains = list(domain_dict.keys())
     domains.sort()
     for domain in domains:
-        hosts=compress_domain(domain_dict[domain])
+        hosts = compress_domain(domain_dict[domain])
         result += hosts
     return result
 
@@ -277,12 +280,11 @@ def compress_domain(hostnames):
     Compress a list of hosts in a domain into a more compact representation
     """
     hostnames.sort()
-    prev_dict = { 'prefix': "", 'suffix': '', 'number': 0 }
+    prev_dict = {'prefix': "", 'suffix': '', 'number': 0}
     items = []
     items_block = []
     new_hosts = []
     for host in hostnames:
-        #print re.match(r"([^0-9]+)(\d+)(.+).?",sys.argv[1]).groups()
         try:
             parsed_dict = re.match(
                 r"(?P<prefix>[^0-9]+)(?P<number>\d+)(?P<suffix>.*).?",
@@ -297,13 +299,16 @@ def compress_domain(hostnames):
         except AttributeError:
             if '.' not in host:
                 host += '.'
-                parsed_dict = { 'host': compress([host])[0].strip('.') }
+                parsed_dict = {'host': compress([host])[0].strip('.')}
             else:
-                parsed_dict = { 'host': host }
+                parsed_dict = {'host': host}
             new_hosts.append(parsed_dict)
     new_hosts = multikeysort(new_hosts, ['prefix', 'number_int'])
     for parsed_dict in new_hosts:
-        if 'host' in parsed_dict.keys() or parsed_dict['prefix'] != prev_dict['prefix'] or parsed_dict['suffix'] != prev_dict['suffix'] or int(parsed_dict['number']) != int(prev_dict['number']) + 1:
+        if 'host' in parsed_dict.keys() or \
+                parsed_dict['prefix'] != prev_dict['prefix'] or \
+                parsed_dict['suffix'] != prev_dict['suffix'] or \
+                int(parsed_dict['number']) != int(prev_dict['number']) + 1:
             if len(items_block):
                 items.append(items_block)
             items_block = [parsed_dict]
@@ -325,16 +330,21 @@ def compress_domain(hostnames):
             else:
                 result.append(
                     '%s[%s-%s]%s' % (
-                        item[0]['prefix'], item[0]['number'], item[-1]['number'], item[0]['suffix']
+                        item[0]['prefix'],
+                        item[0]['number'],
+                        item[-1]['number'],
+                        item[0]['suffix']
                     )
                 )
     return result
 
 
 def range_split(hosts):
-    """ Split up a range string, this needs to separate comma separated
+    """
+    Split up a range string, this needs to separate comma separated
     items unless they are within square brackets and split out set operations
-    as separate items."""
+    as separate items.
+    """
     in_brackets = False
     current = ""
     result_list = []
@@ -346,15 +356,16 @@ def range_split(hosts):
         if not in_brackets and c == ',':
             result_list.append(current)
             current = ""
-        #elif not in_brackets and c == '-':
-        #    result_list.append(current)
-        #    result_list.append('-')
-        #    current = ""
+        # elif not in_brackets and c == '-':
+        #     result_list.append(current)
+        #     result_list.append('-')
+        #     current = ""
         elif not in_brackets and c in [','] and len(current) == 0:
             pass
         else:
             current += c
-    if len(current):
+    current = current.strip().strip(',')
+    if current:
         result_list.append(current)
     return result_list
 

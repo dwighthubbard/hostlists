@@ -2,23 +2,27 @@
 """
 Setup configuration for hostlists
 """
-__license__ = """
- Copyright (c) 2010-2014 Yahoo! Inc. All rights reserved.
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
 
- http://www.apache.org/licenses/LICENSE-2.0
+# Copyright (c) 2010-2015 Yahoo! Inc. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License. See accompanying LICENSE file.
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License. See accompanying LICENSE file.
-"""
-from distutils.core import setup
+from setuptools import setup
+import json
 import os
 import sys
+
+
+METADATA_FILENAME = 'hostlists/metadata.json'
 
 
 # Python2 and Python3 have different requirements
@@ -38,7 +42,7 @@ setup_args = {
     'license': 'LICENSE.txt',
     'packages': ['hostlists', 'hostlists.plugins'],
     'scripts': ['hostlists/hostlists'],
-    'long_description': open('README.md').read(),
+    'long_description': open('README.rst').read(),
     'classifiers': [
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
@@ -48,8 +52,16 @@ setup_args = {
         'Natural Language :: English',
         'Operating System :: POSIX',
         'Operating System :: POSIX :: Linux',
+        'Operating System :: POSIX :: SunOS/Solaris',
+        'Operating System :: MacOS :: MacOS X',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: System :: Systems Administration',
         'Topic :: Utilities'
     ],
@@ -107,8 +119,25 @@ class Git(object):
                 return split_item[1]
 
 
-if __name__ == '__main__':
-    git = Git(version=setup_args['version'])
-    setup_args['version'] = git.version
+def get_and_update_metadata():
+    """
+    Get the package metadata or generate it if missing
+    :return:
+    """
+    if not os.path.exists('.git') and os.path.exists('hostlists/metadata.json'):
+        with open(METADATA_FILENAME) as fh:
+            metadata = json.load(fh)
+    else:
+        git = Git(version=setup_args['version'])
+        metadata = {
+            'version': git.version
+        }
+        with open(METADATA_FILENAME, 'w') as fh:
+            json.dump(metadata, fh)
+    return metadata
 
+
+if __name__ == '__main__':
+    metadata = get_and_update_metadata()
+    setup_args['version'] = metadata['version']
     setup(**setup_args)

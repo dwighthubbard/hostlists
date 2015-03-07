@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-#Copyright (c) 2012 Yahoo! Inc. All rights reserved.
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
+# Copyright (c) 2010-2015 Yahoo! Inc. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 
 # http://www.apache.org/licenses/LICENSE-2.0
 #
@@ -14,7 +14,6 @@
 """
 Unit tests of sshmap
 """
-__author__ = 'dhubbard'
 import hostlists
 import tempfile
 import unittest
@@ -25,8 +24,6 @@ class TestHostlistsExpand(unittest.TestCase):
     """
     hostmap unit tests
     """
-    def set_up(self):
-        pass
 
     class base_test_expand_string_input(unittest.TestCase):
         range_list = 'localhost'
