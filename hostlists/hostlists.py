@@ -55,7 +55,7 @@ def _get_plugins(refresh=False):
     plugins = global_plugins
 
     if plugins and not refresh:
-        return
+        return plugins
 
     pluginlist = []
     plugin_path = [
