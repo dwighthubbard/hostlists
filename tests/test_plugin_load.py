@@ -46,9 +46,10 @@ class TestHostPluginLoad(unittest.TestCase):
         self.assertIn('haproxy', self.hostlists_plugins)
 
     def testPluginRangeLoad(self):
-        import hostlists.plugins.range
-        self.assertIn('range', hostlists.plugins.range.name())
+        from hostlists_plugins_default.range import HostlistsPluginRange
+        self.assertIn('range', HostlistsPluginRange.names)
         self.assertIn('range', self.hostlists_plugins)
+
 
 if __name__ == '__main__':
     unittest.main()

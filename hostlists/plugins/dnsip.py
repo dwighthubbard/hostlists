@@ -24,7 +24,7 @@ def name():
     return 'dnsip'
 
 
-def expand(value):
+def expand(value, name=None):
     tmplist = []
     try:
         answers = list(dns.resolver.query(value))

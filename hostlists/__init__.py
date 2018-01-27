@@ -12,10 +12,9 @@
 # limitations under the License. See accompanying LICENSE file.
 
 
-from .hostlists import compress, compress_domain, expand, expand_item   # NOQA
-from .hostlists import global_plugins, installed_plugins, multiple_names  # NOQA
-from .hostlists import range_split, get_setting, HostListsError  # NOQA
-from .hostlists import get_plugins, cmp_compat  # NOQA
+from .hostlists import cmp_compat, compress, compress_domain, expand, expand_item   # NOQA
+from .plugin_manager import get_plugins, global_plugins, installed_plugins  # NOQA
+from .hostlists import multiple_names, range_split, get_setting, HostListsError  # NOQA
 import json
 import os
 

@@ -52,7 +52,7 @@ import base64
 import hostlists
 import json
 import os
-
+import json.decoder
 
 # Get urlopen for either python2 or python3
 try:
@@ -139,7 +139,7 @@ def expand(value, name='haproxy', method=None):
         try:
             hosts = json.loads(os.popen(command).read())
             return hosts
-        except:
+        except ValueError:
             return []
     else:
         url = "http://%s/haproxy?stats;csv" % haproxy
