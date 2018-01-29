@@ -11,11 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. See accompanying LICENSE file.
 
-
+import pkg_resources
 from .hostlists import cmp_compat, compress, compress_domain, expand, expand_item   # NOQA
 from .plugin_manager import get_plugins, global_plugins, installed_plugins  # NOQA
 from .hostlists import multiple_names, range_split, get_setting, HostListsError  # NOQA
-import pkg_resources
 
 
-__version__ = pkg_resources.get_distribution("hostlists").version
+__version__ = '0.0.0unknown0'
+try:
+    __version__ = pkg_resources.get_distribution("hostlists").version
+except pkg_resources.DistributionNotFound:
+    pass
