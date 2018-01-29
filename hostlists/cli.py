@@ -1,7 +1,7 @@
 from __future__ import print_function
 import argparse
 import sys
-from .hostlists import compress, expand, range_split
+from . import compress, expand, range_split
 from .plugin_manager import installed_plugins
 
 

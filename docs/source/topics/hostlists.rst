@@ -15,7 +15,7 @@ through each other recursively.
 Host Range Plugin
 -----------------
 
-.. automodule:: hostlists.plugins.range
+.. automodule:: hostlists_plugins_default.range
 
 File Plugin
 -----------

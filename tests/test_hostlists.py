@@ -15,7 +15,7 @@
 Unit tests of sshmap
 """
 import hostlists
-import hostlists.hostlists
+import hostlists
 import json
 import os
 import types
@@ -24,7 +24,7 @@ import unittest
 
 class TestHostlists(unittest.TestCase):
     """
-    hostlists.py unit tests
+    hostlists_module.py unit tests
     """
     def test_cmp_compat(self):
         self.assertEqual(hostlists.cmp_compat(1, 2), -1)
