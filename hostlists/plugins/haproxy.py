@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 """
 haproxy host plugin
-NOTE:
-This script is primarily intended as a proof of concept of adding a load
-balancer as the host IP address source.
 
-THEORY OF OPERATION:
-Since haproxy does not provide an externally accessible means of accessing
-the backend names and states for hosts it is proxying this module uses ssh
-to call a helper script on the haproxy server to get the information.
-
-USAGE:
+USAGE
+-----
 This plugin requires a signifcant amount of pre-configuration on the haproxy
 server in order to work.  This requires a configuration change to enable
 the stats socket in haproxy, setting permissions, and copying the
@@ -18,21 +11,32 @@ get_haproxy_phys script into place.
 
 The setup steps are:
 
-1. Enable the haproxy status socket, the script expects it to be /tmp/haproxy
-   by adding:
-        stats socket    /tmp/haproxy
-   to the global section of the /etc/haproxy/haproxy.cfg file
+    1. Enable the haproxy status socket, the script expects it to be /tmp/haproxy
+       by adding:
+            stats socket    /tmp/haproxy
+       to the global section of the /etc/haproxy/haproxy.cfg file
 
-2. Restart haproxy to create the socket
+    2. Restart haproxy to create the socket
 
-3. Make sure the socket file is owned by the user that will be connecting
-   to the haproxy server.
+    3. Make sure the socket file is owned by the user that will be connecting
+       to the haproxy server.
 
-4. Copy the get_haproxy_phys from the sshmap hostlists_plugins directory
-   into the root of the home directory of the user that will be connecing
-   to the haproxy server.
-5. Set up the user's ~/.ssh/authorized_keys file to allow access via ssh
-   without password.
+    4. Copy the get_haproxy_phys from the sshmap hostlists_plugins directory
+       into the root of the home directory of the user that will be connecing
+       to the haproxy server.
+    5. Set up the user's ~/.ssh/authorized_keys file to allow access via ssh
+       without password.
+
+NOTE
+----
+This plugin is primarily intended as a proof of concept of adding a load
+balancer as the host IP address source.
+
+THEORY OF OPERATION
+-------------------
+Since haproxy does not provide an externally accessible means of accessing
+the backend names and states for hosts it is proxying this module uses ssh
+to call a helper script on the haproxy server to get the information.
 """
 
 # Copyright (c) 2012 Yahoo! Inc. All rights reserved.
