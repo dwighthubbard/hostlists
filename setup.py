@@ -21,9 +21,6 @@ from setuptools import setup
 import sys
 
 
-METADATA_FILENAME = 'hostlists/metadata.json'
-
-
 def setuptools_version_supported():
     major, minor, patch = setuptools.__version__.split('.')
     if int(major) > 31:
@@ -31,13 +28,8 @@ def setuptools_version_supported():
     return False
 
 
-setup_args = {
-    'license': 'LICENSE.txt',
-}
-
-
 if __name__ == '__main__':
     if not setuptools_version_supported():
         print('Setuptools version 32.0.0 or higher is needed to install this package')
         sys.exit(1)
-    setup(**setup_args)
+    setup()
