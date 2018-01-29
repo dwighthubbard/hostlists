@@ -71,4 +71,3 @@ setup_args = {
 
 if __name__ == '__main__':
     setup(**setup_args)
-
