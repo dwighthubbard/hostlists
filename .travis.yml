@@ -10,7 +10,9 @@ install:
   - pip install --upgrade setuptools
   - pip install --upgrade -r test_requirements.txt
 script:
-  - nosetests --with-coverage --cover-xml --cover-erase  --cover-package=hostlists --cover-xml-file=cobertura.xml tests
+  - pycodestyle hostlists
+  - pylint hostlists
+  - pytest --cov=hostlists --cov-report=xml:cobertura.xml --cov-report term-missing tests/
 matrix:
   fast_finish: true
   allow_failures:

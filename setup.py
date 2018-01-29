@@ -33,31 +33,6 @@ def setuptools_version_supported():
 
 setup_args = {
     'license': 'LICENSE.txt',
-    'packages': ['hostlists', 'hostlists.plugins', 'hostlists_plugins_default'],
-    'long_description': open('README.rst').read(),
-    'classifiers': [
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Console',
-        'Intended Audience :: Developers',
-        'Intended Audience :: System Administrators',
-        'License :: OSI Approved :: Apache Software License',
-        'Natural Language :: English',
-        'Operating System :: POSIX',
-        'Operating System :: POSIX :: Linux',
-        'Operating System :: POSIX :: SunOS/Solaris',
-        'Operating System :: MacOS :: MacOS X',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
-        'Topic :: System :: Systems Administration',
-        'Topic :: Utilities'
-    ],
-    'description': 'A python library to obtain lists of hosts from various systems',
 }
 
 

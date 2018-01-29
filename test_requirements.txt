@@ -1,3 +1,5 @@
 coveralls
-nose
-nose-cov
+pycodestyle
+pylint
+pytest
+pytest-cov
