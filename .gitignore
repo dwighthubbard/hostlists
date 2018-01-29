@@ -23,7 +23,7 @@ pip-log.txt
 
 # Unit test / coverage reports
 .coverage
-.tox
+/.tox
 nosetests.xml
 
 # Translations
@@ -37,7 +37,7 @@ nosetests.xml
 # Backup files
 *~
 
-.idea
+/.idea
 
 # Package metadata
 hostlists/package_metadata.json
