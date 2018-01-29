@@ -24,7 +24,7 @@ def name():
     return 'dns'
 
 
-def expand(value):
+def expand(value, name=None):
     tmplist = []
     addresses = []
     try:

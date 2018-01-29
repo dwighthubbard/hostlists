@@ -26,29 +26,22 @@ from __future__ import print_function
 
 
 import os
-import sys
-import imp
 import json
 import logging
 import re
 import operator
+from .exceptions import HostListsError
+from .plugin_manager import _get_plugins, run_plugin_expand
 
 
 logger = logging.getLogger(__name__)
 
-
-# Global plugin cache so we don't constantly reload the plugin modules
-global_plugins = {}
 
 # A list of operators we use for set options
 SET_OPERATORS = ['-']
 
 # Config file
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
-
-
-class HostListsError(Exception):
-    pass
 
 
 def cmp_compat(a, b):
@@ -59,64 +52,6 @@ def cmp_compat(a, b):
     :return:
     """
     return (a > b) - (a < b)
-
-
-def _get_plugins():
-    """ Find all the hostlists plugins """
-    plugins = global_plugins
-    pluginlist = []
-    plugin_path = [
-        '/home/y/lib/hostlists',
-        os.path.dirname(__file__),
-        '~/.hostlists',
-    ] + sys.path
-    for directory in plugin_path:
-        if os.path.isdir(os.path.join(directory, 'plugins')):
-            templist = os.listdir(os.path.join(directory, 'plugins'))
-            for item in templist:
-                pluginlist.append(
-                    os.path.join(os.path.join(directory, 'plugins'), item)
-                )
-    pluginlist.sort()
-    # Create a dict mapping the plugin name to the plugin method
-    for item in pluginlist:
-        if item.endswith('.py'):
-            module_file = open(item)
-            try:
-                mod = imp.load_module(
-                    'hostlists_plugins_%s' % os.path.basename(item[:-3]),
-                    module_file,
-                    item,
-                    ('.py', 'r', imp.PY_SOURCE)
-                )
-                names = mod.name()
-                if isinstance(names, str):
-                    names = [names]
-                for name in names:
-                    if name not in plugins.keys():
-                        plugins[name.lower()] = mod
-            except:
-                # Error in module import, probably a plugin bug
-                logger.debug(
-                    "Plugin import failed %s:" % item
-                )
-            if module_file:
-                module_file.close()
-    return plugins
-
-
-def get_plugins():
-    """ Wrap the get_plugins() function so it can be used by plugins
-    """
-    return _get_plugins()
-
-
-def installed_plugins():
-    plugins = []
-    for plugin in _get_plugins():
-        if plugin:
-            plugins.append(plugin)
-    return plugins
 
 
 def get_setting(key):
@@ -138,7 +73,7 @@ def get_setting(key):
 def expand(range_list, onepass=False):
     """
     Expand a list of lists and set operators into a final host lists
-    >>> hostlists.expand(['foo[01-10]','-','foo[04-06]'])
+    >>> expand(['foo[01-10]','-','foo[04-06]'])
     ['foo09', 'foo08', 'foo07', 'foo02', 'foo01', 'foo03', 'foo10']
     >>>
     """
@@ -190,36 +125,18 @@ def expand_item(range_list, onepass=False):
     for item in range_list:
         # Is the item a plugin
         temp = item.split(':')
+        found_plugin = False
         if len(temp) > 1:
             plugin = temp[0].lower()
             # Do we have a plugin that matches the passed plugin
-            if plugin in plugins.keys():
-                # Call the plugin
-                item = None
-                if multiple_names(plugins[plugin]):  # Pragma no cover
-                    newlist += plugins[plugin].expand(
-                        ':'.join(temp[1:]).strip(':'),
-                        name=plugin
-                    )
-                else:
-                    newlist += plugins[plugin].expand(
-                        ':'.join(temp[1:]).strip(':'))
-                found_plugin = True
-            else:
-                # This should probably just be an exception
-                raise HostListsError(
-                    'plugin %s not found, value plugins are: %s' % (
-                        plugin, ','.join(plugins.keys())
-                    )
-                )
+            newlist += run_plugin_expand(plugin, ':'.join(temp[1:]).strip(':'))
+            found_plugin = True
         else:
             # Default to running through the range plugin
-            item = None
-            newlist += plugins['range'].expand(temp[0])
-        if item:
-            newlist.append(item)
-        # Recurse back through ourselves incase a plugin returns a value that
-        # needs to be parsed
+            newlist += run_plugin_expand('range', temp[0])
+
+    # Recurse back through ourselves incase a plugin returns a value that
+    # needs to be parsed
     # by another plugin.  For example a dns resource that has an address that
     # points to a load balancer vip that may container a number of hosts that
     # need to be looked up via the load_balancer plugin.

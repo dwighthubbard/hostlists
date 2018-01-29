@@ -11,23 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. See accompanying LICENSE file.
 
-
-from .hostlists import compress, compress_domain, expand, expand_item   # NOQA
-from .hostlists import global_plugins, installed_plugins, multiple_names  # NOQA
-from .hostlists import range_split, get_setting, HostListsError  # NOQA
-from .hostlists import get_plugins, cmp_compat  # NOQA
-import json
-import os
+import pkg_resources
+from .hostlists import cmp_compat, compress, compress_domain, expand, expand_item   # NOQA
+from .plugin_manager import get_plugins, global_plugins, installed_plugins  # NOQA
+from .hostlists import multiple_names, range_split, get_setting, HostListsError  # NOQA
 
 
-_metadata_file = os.path.join(
-    os.path.dirname(__file__),
-    'package_metadata.json'
-)
-
-if os.path.exists(_metadata_file):  # pragma: no cover
-    with open(_metadata_file) as fh:
-        _package_metadata = json.load(fh)
-        __version__ = _package_metadata['version']
-else:
-    __version__ = '0.0.0'
+__version__ = '0.0.0unknown0'
+try:
+    __version__ = pkg_resources.get_distribution("hostlists").version
+except pkg_resources.DistributionNotFound:
+    pass

@@ -15,6 +15,7 @@
 Unit tests of sshmap
 """
 import hostlists
+import hostlists.hostlists
 import json
 import os
 import types
