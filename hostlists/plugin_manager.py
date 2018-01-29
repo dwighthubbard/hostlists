@@ -97,7 +97,7 @@ def run_plugin_expand(name, value):
     plugins = _get_plugins()
     if name not in plugins.keys():
         raise HostListsError(
-            'plugin %s not found, value plugins are: %s' % (
+            'plugin %s not found, valid plugins are: %s' % (
                 name, ','.join(plugins.keys())
             )
         )

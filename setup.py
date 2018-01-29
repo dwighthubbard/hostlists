@@ -16,6 +16,7 @@ Setup configuration for hostlists
 # See the License for the specific language governing permissions and
 # limitations under the License. See accompanying LICENSE file.
 
+import setuptools
 from setuptools import setup
 import sys
 
@@ -23,20 +24,14 @@ import sys
 METADATA_FILENAME = 'hostlists/metadata.json'
 
 
-# Python2 and Python3 have different requirements
-requirements = ['requests']
-if sys.version > '3.0.0':
-    requirements.append('dnspython3')
-else:
-    requirements.append('dnspython')
+def setuptools_version_supported():
+    major, minor, patch = setuptools.__version__.split('.')
+    if int(major) > 31:
+        return True
+    return False
 
 
 setup_args = {
-    'name': 'hostlists',
-    'version': '0.8.0',
-    'author': 'Dwight Hubbard',
-    'author_email': 'dhubbard@yahoo-inc.com',
-    'url': 'https://github.com/yahoo/hostlists',
     'license': 'LICENSE.txt',
     'packages': ['hostlists', 'hostlists.plugins', 'hostlists_plugins_default'],
     'long_description': open('README.rst').read(),
@@ -62,12 +57,12 @@ setup_args = {
         'Topic :: System :: Systems Administration',
         'Topic :: Utilities'
     ],
-    'description': 'A python library to obtain lists of hosts from various '
-                   'systems',
-    'requires': requirements,
-    'install_requires': requirements,
+    'description': 'A python library to obtain lists of hosts from various systems',
 }
 
 
 if __name__ == '__main__':
+    if not setuptools_version_supported():
+        print('Setuptools version 32.0.0 or higher is needed to install this package')
+        sys.exit(1)
     setup(**setup_args)
