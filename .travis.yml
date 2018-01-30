@@ -13,7 +13,7 @@ install:
 script:
   - pycodestyle hostlists
   - pylint hostlists
-  - pytest --cov=hostlists,hostlists_plugins_default --cov-report=xml:cobertura.xml --cov-report term-missing tests/
+  - pytest --cov=hostlists --cov-report=xml:cobertura.xml --cov-report term-missing tests/
 matrix:
   fast_finish: true
   allow_failures:
