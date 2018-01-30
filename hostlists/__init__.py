@@ -23,7 +23,6 @@ from .range import range_split
 from .exceptions import HostListsError
 
 
-
 # Config file
 CONF_FILE = os.path.expanduser('~/.hostlists.conf')
 
@@ -42,7 +41,6 @@ def get_setting(key):
     if key in settings.keys():
         return settings[key]
     return None    # pragma: no cover
-
 
 
 try:
