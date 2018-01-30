@@ -84,6 +84,18 @@ def get_plugins():
     return plugins
 
 
+def multiple_names(plugin):
+    plugins = get_plugins()
+    count = 0
+    for item in plugins.keys():
+        if plugins[item] == plugin:
+            count += 1
+    if count > 1:  # Pragma no cover
+        return True
+    else:
+        return False
+
+
 def run_plugin_expand(name, value):
     """
     Run a plugin's expand method
@@ -102,7 +114,7 @@ def run_plugin_expand(name, value):
 
 def installed_plugins():
     plugins = []
-    for plugin in _get_plugins():
+    for plugin in get_plugins():
         if plugin:
             plugins.append(plugin)
     return plugins

@@ -3,9 +3,7 @@
 
 class HostlistsPlugin(object):
 
-    @property
-    def names(self):
-        return []
+    names = []
 
     def expand(self, value, name=None):
         return value

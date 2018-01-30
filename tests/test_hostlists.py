@@ -15,7 +15,6 @@
 Unit tests of sshmap
 """
 import hostlists
-import hostlists
 import json
 import os
 import types
@@ -27,8 +26,8 @@ class TestHostlists(unittest.TestCase):
     hostlists_module.py unit tests
     """
     def test_cmp_compat(self):
-        self.assertEqual(hostlists.cmp_compat(1, 2), -1)
-        self.assertEqual(hostlists.cmp_compat(2, 1), 1)
+        self.assertEqual(hostlists.range.cmp_compat(1, 2), -1)
+        self.assertEqual(hostlists.range.cmp_compat(2, 1), 1)
 
     def test_get_plugins(self):
         plugins = hostlists.get_plugins()
@@ -38,7 +37,7 @@ class TestHostlists(unittest.TestCase):
     def test_get_setting_without_config_file(self):
         if os.path.exists('test_get_setting.conf'):
             os.remove('test_get_setting.conf')
-        hostlists.hostlists.CONF_FILE = os.path.abspath('test_get_setting.conf')
+        hostlists.CONF_FILE = os.path.abspath('test_get_setting.conf')
         result = hostlists.get_setting('key')
         self.assertIsNone(result)
 
@@ -48,7 +47,7 @@ class TestHostlists(unittest.TestCase):
         }
         with open('test_get_setting.conf', 'w') as tf:
             json.dump(expected_dict, tf)
-        hostlists.hostlists.CONF_FILE = os.path.abspath('test_get_setting.conf')
+        hostlists.CONF_FILE = os.path.abspath('test_get_setting.conf')
         result = hostlists.get_setting('key')
         os.remove('test_get_setting.conf')
         self.assertEqual(result, 'value')
