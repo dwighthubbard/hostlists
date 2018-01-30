@@ -46,5 +46,5 @@ def get_setting(key):
 try:
     import pkg_resources
     __version__ = pkg_resources.get_distribution("hostlists").version
-except (ImportError, pkg_resources.DistributionNotFound):
+except (ImportError, pkg_resources.DistributionNotFound):  # pragma: no cover
     pass

@@ -1,6 +1,6 @@
 import sys
 import unittest
-from hostlists.cli import parse_arguments
+from hostlists.cli import main, parse_arguments
 
 
 class TestCLI(unittest.TestCase):
@@ -24,3 +24,21 @@ class TestCLI(unittest.TestCase):
         self.assertIsInstance(result.host_range, list)
         self.assertEqual(len(result.host_range), 1)
         self.assertListEqual(result.host_range, ['test[1-2].yahoo.com'])
+
+    def test__parse_arguments__expand__default(self):
+        sys.argv = ['hostlists', '-e', 'test[1-2].yahoo.com']
+        result = parse_arguments()
+        self.assertIsInstance(result.host_range, list)
+        self.assertEqual(len(result.host_range), 1)
+        self.assertListEqual(result.host_range, ['test[1-2].yahoo.com'])
+        self.assertTrue(result.expand)
+        self.assertEqual(result.sep, '\n')
+
+    def test__parse_arguments__expand__sep(self):
+        sys.argv = ['hostlists', '-e', '-s', ',', 'test[1-2].yahoo.com']
+        result = parse_arguments()
+        self.assertIsInstance(result.host_range, list)
+        self.assertEqual(len(result.host_range), 1)
+        self.assertListEqual(result.host_range, ['test[1-2].yahoo.com'])
+        self.assertTrue(result.expand)
+        self.assertEqual(result.sep, ',')
