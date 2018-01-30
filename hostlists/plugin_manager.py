@@ -4,7 +4,6 @@ import os
 import sys
 import pkg_resources
 from .exceptions import HostListsError
-from .plugin_base import HostlistsPlugin
 
 
 # Global plugin cache so we don't constantly reload the plugin modules
@@ -33,7 +32,7 @@ def _get_plugins__pkg_resources():
     return global_plugins
 
 
-def _get_plugins():
+def get_plugins():
     """ Find all the hostlists plugins """
     global global_plugins
     global plugins_probed
@@ -85,16 +84,23 @@ def _get_plugins():
     return plugins
 
 
-def get_plugins():
-    """ Wrap the get_plugins() function so it can be used by plugins"""
-    return _get_plugins()
+def multiple_names(plugin):
+    plugins = get_plugins()
+    count = 0
+    for item in plugins.keys():
+        if plugins[item] == plugin:
+            count += 1
+    if count > 1:  # Pragma no cover
+        return True
+    else:
+        return False
 
 
 def run_plugin_expand(name, value):
     """
     Run a plugin's expand method
     """
-    plugins = _get_plugins()
+    plugins = get_plugins()
     if name not in plugins.keys():
         raise HostListsError(
             'plugin %s not found, valid plugins are: %s' % (
@@ -108,7 +114,7 @@ def run_plugin_expand(name, value):
 
 def installed_plugins():
     plugins = []
-    for plugin in _get_plugins():
+    for plugin in get_plugins():
         if plugin:
             plugins.append(plugin)
     return plugins

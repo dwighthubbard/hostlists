@@ -11,14 +11,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License. See accompanying LICENSE file.
 
-import pkg_resources
-from .hostlists import cmp_compat, compress, compress_domain, expand, expand_item   # NOQA
-from .plugin_manager import get_plugins, global_plugins, installed_plugins  # NOQA
-from .hostlists import multiple_names, range_split, get_setting, HostListsError  # NOQA
-
-
+__all__ = ['cli', 'decorators', 'exceptions', 'plugin_base', 'plugin_manager', 'range']
 __version__ = '0.0.0unknown0'
+
+
+import json
+import os
+from .plugin_manager import get_plugins, installed_plugins, multiple_names, run_plugin_expand
+from .range import compress, expand
+from .range import range_split
+from .exceptions import HostListsError
+
+
+# Config file
+CONF_FILE = os.path.expanduser('~/.hostlists.conf')
+
+
+def get_setting(key):
+    """
+    Get setting values from CONF_FILE
+    :param key:
+    :return:
+    """
+    try:
+        with open(CONF_FILE) as cf:
+            settings = json.load(cf)
+    except IOError:
+        return None
+    if key in settings.keys():
+        return settings[key]
+    return None    # pragma: no cover
+
+
 try:
+    import pkg_resources
     __version__ = pkg_resources.get_distribution("hostlists").version
-except pkg_resources.DistributionNotFound:
+except (ImportError, pkg_resources.DistributionNotFound):
     pass
