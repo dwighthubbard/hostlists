@@ -12,7 +12,7 @@
 # limitations under the License. See accompanying LICENSE file.
 
 __all__ = ['cli', 'decorators', 'exceptions', 'plugin_base', 'plugin_manager', 'range']
-__version__ = '0.0.0unknown0'
+__version__ = '0.0.0dev0'
 
 
 import json
