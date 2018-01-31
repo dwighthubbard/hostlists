@@ -28,13 +28,7 @@ import errno
 import os
 import signal
 from functools import wraps
-
-
-class MethodTimeoutError(Exception):
-    """
-    Timeout exception class
-    """
-    pass
+from .exceptions import MethodTimeoutError
 
 
 def timeout(seconds=300, error_message=os.strerror(errno.ETIME)):

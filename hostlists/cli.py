@@ -14,7 +14,7 @@ def parse_arguments():
         "-s", "--sep",
         dest="sep",
         type=str,
-        default=',',
+        default='',
         help="Separator character, default=\",\""
     )
     parser.add_argument(
@@ -38,10 +38,17 @@ def parse_arguments():
         action="store_true",
         help="List the currently found hostlists plugins"
     )
-    return parser.parse_args()
+    result = parser.parse_args()
+    if result.expand:
+        if not result.sep:
+            result.sep = '\n'
+    else:
+        if not result.sep:
+            result.sep = ','
+    return result
 
 
-def main():
+def main():  # pragma: no cover
     options = parse_arguments()
     if options.list_plugins:
         plugins = installed_plugins()
@@ -55,7 +62,7 @@ def main():
     hostnames = range_split(','.join(options.host_range))
     seperator = options.sep + ' '
     if options.expand:
-        print('\n'.join(expand(hostnames, onepass=options.onepass)))
+        print(options.sep.join(expand(hostnames, onepass=options.onepass)))
     else:
         print(
             seperator.join(
