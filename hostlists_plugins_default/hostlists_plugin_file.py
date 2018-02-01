@@ -20,11 +20,28 @@ from hostlists.plugin_base import HostlistsPlugin
 class HostlistsPluginFile(HostlistsPlugin):
     names = ['file']
 
+    def _find_file(self, filename):
+        filename = os.path.expanduser(filename)
+        if os.path.exists(filename):
+            return filename
+
+        search_path = os.environ.get('HOSTLISTSPATH', '.;~/.hostlists/file').split(';')
+        for directory in search_path:
+            new_filename = os.path.expanduser(os.path.join(directory, filename))
+            if os.path.exists(new_filename):
+                return new_filename
+
     def expand(self, value, name="file"):
         tmplist = []
-        for host in [
-            i.strip() for i in open(os.path.expanduser(value), 'r').readlines()
-        ]:
-            if not host.startswith('#') and len(host.strip()):
+        filename = self._find_file(value)
+        if not filename:
+            return []
+
+        with open(filename, 'r') as file_handle:
+            for host in file_handle:
+                host = host.strip()
+                if not host or host.startswith('#'):
+                    continue
                 tmplist.append(host)
+
         return tmplist

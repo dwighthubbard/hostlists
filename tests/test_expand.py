@@ -68,12 +68,13 @@ class TestHostlistsExpand(unittest.TestCase):
     class test_expand__string_input__file_plugin(
         base_test_expand_string_input
     ):
-        tfile = tempfile.NamedTemporaryFile(delete=False, mode='w')
-        tfile.write('localhost\n')
-        tfile.close()
-        range_list = 'file:%s' % tfile.name
-        print(range_list)
         expected_result = ['localhost']
+
+        def setUp(self):
+            self.tfile = tempfile.NamedTemporaryFile(delete=False, mode='w')
+            self.tfile.write('localhost\n')
+            self.tfile.close()
+            self.range_list = 'file:%s' % self.tfile.name
 
         def tearDown(self):
             if self.tfile:
