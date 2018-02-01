@@ -36,8 +36,8 @@ class TestHostPluginLoad(unittest.TestCase):
         self.assertIn('dnsip', self.hostlists_plugins)
 
     def testPluginFileLoad(self):
-        import hostlists.plugins.file
-        self.assertIn('file', hostlists.plugins.file.name())
+        from hostlists_plugins_default.file import HostlistsPluginFile
+        self.assertIn('file', HostlistsPluginFile.names)
         self.assertIn('file', self.hostlists_plugins)
 
     def testPluginHaproxyLoad(self):

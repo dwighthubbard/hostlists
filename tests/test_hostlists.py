@@ -32,7 +32,6 @@ class TestHostlists(unittest.TestCase):
     def test_get_plugins(self):
         plugins = hostlists.get_plugins()
         self.assertIn('file', plugins.keys())
-        self.assertIsInstance(plugins['file'], types.ModuleType)
 
     def test_get_setting_without_config_file(self):
         if os.path.exists('test_get_setting.conf'):
