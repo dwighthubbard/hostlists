@@ -36,12 +36,12 @@ class TestHostPluginLoad(unittest.TestCase):
         self.assertIn('dnsip', self.hostlists_plugins)
 
     def testPluginDnsLoad(self):
-        from hostlists_plugins_default.dns import HostlistsPluginDns
+        from hostlists_plugins_default.hostlists_plugin_dns import HostlistsPluginDns
         self.assertIn('dns', HostlistsPluginDns.names)
         self.assertIn('dns', self.hostlists_plugins)
 
     def testPluginFileLoad(self):
-        from hostlists_plugins_default.file import HostlistsPluginFile
+        from hostlists_plugins_default.hostlists_plugin_file import HostlistsPluginFile
         self.assertIn('file', HostlistsPluginFile.names)
         self.assertIn('file', self.hostlists_plugins)
 
