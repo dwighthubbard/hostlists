@@ -8,7 +8,7 @@ from .plugin_manager import installed_plugins
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'host_range', nargs='+', type=str, help='plugin:parameters'
+        'host_range', nargs='*', type=str, help='plugin:parameters'
     )
     parser.add_argument(
         "-s", "--sep",
@@ -32,7 +32,7 @@ def parse_arguments():
         help="Expand the host list and display one host per line"
     )
     parser.add_argument(
-        "--list_plugins",
+        "--list_plugins", "-l",
         dest="list_plugins",
         default=False,
         action="store_true",
@@ -57,7 +57,7 @@ def main():  # pragma: no cover
             'Hostlists plugins currently installed are:'
         )
         print('\t' + '\n\t'.join(plugins))
-        sys.exit(0)
+        return
 
     hostnames = range_split(','.join(options.host_range))
     seperator = options.sep + ' '

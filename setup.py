@@ -23,13 +23,13 @@ import sys
 
 def setuptools_version_supported():
     major, minor, patch = setuptools.__version__.split('.')
-    if int(major) > 31:
+    if int(major) > 34:
         return True
     return False
 
 
 if __name__ == '__main__':
     if not setuptools_version_supported():
-        print('Setuptools version 32.0.0 or higher is needed to install this package')
+        print('Setuptools version 34.0.0 or higher is needed to install this package')
         sys.exit(1)
     setup()

@@ -18,6 +18,16 @@ class TestCLI(unittest.TestCase):
         with self.assertRaises(SystemExit):
             result = parse_arguments()
 
+    def test__parse_arguments__list_plugins(self):
+        sys.argv = ['hostlists', '--list_plugins']
+        result = parse_arguments()
+        self.assertTrue(result.list_plugins)
+
+    def test__parse_arguments__list_plugins_short(self):
+        sys.argv = ['hostlists', '-l']
+        result = parse_arguments()
+        self.assertTrue(result.list_plugins)
+
     def test__parse_arguments__hostrange__single(self):
         sys.argv = ['hostlists', 'test[1-2].yahoo.com']
         result = parse_arguments()
