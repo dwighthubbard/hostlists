@@ -1,9 +1,7 @@
 #!/usr/bin/env python
-"""
-Setup configuration for hostlists
-"""
+""" hostlists plugin to get hosts from a filei """
 
-# Copyright (c) 2010-2015 Yahoo! Inc. All rights reserved.
+# Copyright (c) 2010-2013 Yahoo! Inc. All rights reserved.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -15,21 +13,18 @@ Setup configuration for hostlists
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License. See accompanying LICENSE file.
-
-import setuptools
-from setuptools import setup
-import sys
+import os
+from hostlists.plugin_base import HostlistsPlugin
 
 
-def setuptools_version_supported():
-    major, minor, patch = setuptools.__version__.split('.')
-    if int(major) > 34:
-        return True
-    return False
+class HostlistsPluginFile(HostlistsPlugin):
+    names = ['file']
 
-
-if __name__ == '__main__':
-    if not setuptools_version_supported():
-        print('Setuptools version 34.0.0 or higher is needed to install this package')
-        sys.exit(1)
-    setup()
+    def expand(self, value, name="file"):
+        tmplist = []
+        for host in [
+            i.strip() for i in open(os.path.expanduser(value), 'r').readlines()
+        ]:
+            if not host.startswith('#') and len(host.strip()):
+                tmplist.append(host)
+        return tmplist
