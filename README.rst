@@ -8,16 +8,16 @@ hostlists
 .. image:: https://coveralls.io/repos/yahoo/hostlists/badge.svg
   :target: https://coveralls.io/r/yahoo/hostlists
 
-.. image:: https://pypip.in/download/hostlists/badge.svg
+.. image:: https://img.shields.io/pypi/dm/hostlists.svg
     :target: https://pypi.python.org/pypi/hostlists/
     
-.. image:: https://pypip.in/version/hostlists/badge.svg
+.. image:: https://img.shields.io/pypi/v/hostlists.svg
    :target: https://pypi.python.org/pypi/hostlists
 
-.. image:: https://pypip.in/py_versions/hostlists/badge.svg
+.. image:: https://img.shields.io/pypi/pyversions/hostlists.svg
     :target: https://pypi.python.org/pypi/hostlists/
 
-.. image:: https://pypip.in/license/hostlists/badge.svg
+.. image:: https://img.shields.io/pypi/l/hostlists.svg
     :target: https://pypi.python.org/pypi/hostlists/
 
     
