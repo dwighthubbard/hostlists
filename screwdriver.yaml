@@ -5,8 +5,6 @@ version: 4
 shared:
     environment:
         CHANGELOG_FILENAME: docs/changelog.md
-        DOCUMENTATION_DEBUG: False
-        DOCUMENTATION_FORMATS: sphinx
 
 jobs:
     validate_codestyle:
@@ -29,10 +27,6 @@ jobs:
         template: python/validate_unittest
         requires: [~commit, ~pr]
 
-    validate_type:
-        template: python/validate_type
-        requires: [~commit, ~pr]
-
     validate_documentation:
         template: python/documentation
         environment:
@@ -41,7 +35,7 @@ jobs:
 
     generate_version:
         template: python/generate_version
-        requires: [validate_test, validate_lint, validate_codestyle, validate_dependencies, validate_security, validate_type]
+        requires: [~commit]
 
     publish_test_pypi:
         template: python/package_python
