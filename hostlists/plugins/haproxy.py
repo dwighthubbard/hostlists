@@ -138,7 +138,7 @@ def expand(value, name='haproxy', method=None):
             timeout = server_setting(haproxy, 'timeout')
     tmplist = []
     if method == 'ssh':
-        command = 'ssh "%s" ./get_haproxy_phys "%s" "%s"' % (
+        command = 'ssh "%s" ./get_haproxy_phys "%s" "%s"' % (  # nosec
             haproxy, backend, state)
         try:
             hosts = json.loads(os.popen(command).read())
