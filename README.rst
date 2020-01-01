@@ -8,6 +8,18 @@ hostlists
 .. image:: https://coveralls.io/repos/yahoo/hostlists/badge.svg
   :target: https://coveralls.io/r/yahoo/hostlists
 
+.. image:: https://img.shields.io/pypi/dm/hostlists.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
+.. image:: https://img.shields.io/pypi/v/hostlists.svg
+   :target: https://pypi.python.org/pypi/hostlists
+
+.. image:: https://img.shields.io/pypi/pyversions/hostlists.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
+.. image:: https://img.shields.io/pypi/l/hostlists.svg
+    :target: https://pypi.python.org/pypi/hostlists/
+
     
 Python module to generate lists of hosts from various sources that is extensible
 via plugins.
