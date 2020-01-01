@@ -25,30 +25,31 @@ class TestHostPluginLoad(unittest.TestCase):
     def setUp(self):
         self.hostlists_plugins = hostlists.installed_plugins()
 
-    def testPluginDnsLoad(self):
-        import hostlists.plugins.dns
-        self.assertIn('dns', hostlists.plugins.dns.name())
-        self.assertIn('dns', self.hostlists_plugins)
+    def testPluginHaproxyLoad(self):
+        import hostlists.plugins.haproxy
+        self.assertIn('haproxy', hostlists.plugins.haproxy.name())
+        self.assertIn('haproxy', self.hostlists_plugins)
 
     def testPluginDnsIPLoad(self):
         import hostlists.plugins.dnsip
         self.assertIn('dnsip', hostlists.plugins.dnsip.name())
         self.assertIn('dnsip', self.hostlists_plugins)
 
+    def testPluginDnsLoad(self):
+        from hostlists_plugins_default.hostlists_plugin_dns import HostlistsPluginDns
+        self.assertIn('dns', HostlistsPluginDns.names)
+        self.assertIn('dns', self.hostlists_plugins)
+
     def testPluginFileLoad(self):
-        import hostlists.plugins.file
-        self.assertIn('file', hostlists.plugins.file.name())
+        from hostlists_plugins_default.hostlists_plugin_file import HostlistsPluginFile
+        self.assertIn('file', HostlistsPluginFile.names)
         self.assertIn('file', self.hostlists_plugins)
 
-    def testPluginHaproxyLoad(self):
-        import hostlists.plugins.haproxy
-        self.assertIn('haproxy', hostlists.plugins.haproxy.name())
-        self.assertIn('haproxy', self.hostlists_plugins)
-
     def testPluginRangeLoad(self):
-        import hostlists.plugins.range
-        self.assertIn('range', hostlists.plugins.range.name())
+        from hostlists_plugins_default.range import HostlistsPluginRange
+        self.assertIn('range', HostlistsPluginRange.names)
         self.assertIn('range', self.hostlists_plugins)
+
 
 if __name__ == '__main__':
     unittest.main()

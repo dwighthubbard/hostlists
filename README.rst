@@ -10,7 +10,7 @@ hostlists
 
 .. image:: https://img.shields.io/pypi/dm/hostlists.svg
     :target: https://pypi.python.org/pypi/hostlists/
-    
+
 .. image:: https://img.shields.io/pypi/v/hostlists.svg
    :target: https://pypi.python.org/pypi/hostlists
 
