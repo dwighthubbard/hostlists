@@ -42,9 +42,10 @@ nosetests.xml
 # Package metadata
 hostlists/package_metadata.json
 
-# nose output files
-nosetests.xml
+# unittest output files
+/nosetests.xml
+/pytest_py*.xml
 
 # Coverage report
-cobertura.xml
-
+/cobertura.xml
+/coverage.xml
