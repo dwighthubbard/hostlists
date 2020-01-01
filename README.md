@@ -45,6 +45,6 @@ pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net
 Multiple hosts, ranges and plugins can be passed for a single hostlists
 
 ```bash
-    $ hostlists dns:www.google.com, poodle[10-20,23].dog.com
-    pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net, poodle[10-20].dog.com, poodle23.dog.com
+$ hostlists dns:www.google.com, poodle[10-20,23].dog.com
+pb-in-f99.1e100.net, pb-in-f[103-106].1e100.net, pb-in-f147.1e100.net, poodle[10-20].dog.com, poodle23.dog.com
 ```
