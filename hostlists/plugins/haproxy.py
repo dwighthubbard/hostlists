@@ -57,19 +57,12 @@ import hostlists
 import json
 import os
 import json.decoder
+import subprocess  # nosec
 
-# Get urlopen for either python2 or python3
-try:
-    # noinspection PyUnresolvedReferences
-    from urllib2 import urlopen
-    # noinspection PyUnresolvedReferences
-    from urllib2 import URLError
-    # noinspection PyUnresolvedReferences
-    from urllib2 import Request
-except ImportError:
-    from urllib.request import urlopen
-    from urllib.request import URLError
-    from urllib.request import Request
+
+from urllib.request import urlopen
+from urllib.request import URLError
+from urllib.request import Request
 
 
 def name():
@@ -138,22 +131,25 @@ def expand(value, name='haproxy', method=None):
             timeout = server_setting(haproxy, 'timeout')
     tmplist = []
     if method == 'ssh':
-        command = 'ssh "%s" ./get_haproxy_phys "%s" "%s"' % (  # nosec
-            haproxy, backend, state)
         try:
-            hosts = json.loads(os.popen(command).read())
-            return hosts
+            hosts = subprocess.check_output(['ssh', haproxy, './get_haproxy_phys', backend, state]).decode(errors='ignore')  # nosec
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            return []
+        try:
+            return json.loads(hosts)
         except ValueError:
             return []
     else:
         url = "http://%s/haproxy?stats;csv" % haproxy
         request = Request(url)
         if userid and password:
-            base64string = base64.encodestring(
-                '%s:%s' % (userid, password)).replace('\n', '')
+            userid = userid.strip()
+            password = password.strip()
+            authbytes = f'{userid}:{password}'.encode(errors='ignore')
+            base64string = base64.encodebytes(authbytes)
             request.add_header("Authorization", "Basic %s" % base64string)
         try:
-            result = urlopen(request, timeout=timeout).read()
+            result = urlopen(request, timeout=timeout).read()  # nosec
             for line in result.split('\n'):
                 if not line.startswith('#') and len(
                         line.strip()) and ',' in line:
