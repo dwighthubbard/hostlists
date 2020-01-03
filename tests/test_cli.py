@@ -14,10 +14,6 @@ class TestCLI(unittest.TestCase):
             sys.argv = self.argv_orig
             self.argv_orig = None
 
-    def test__parse_arguments__defaults(self):
-        with self.assertRaises(SystemExit):
-            result = parse_arguments()
-
     def test__parse_arguments__list_plugins(self):
         sys.argv = ['hostlists', '--list_plugins']
         result = parse_arguments()
